@@ -55,7 +55,7 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
                         credits = member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec("supplies").getBasePrice();
                     else credits = 10f;
 
-                    // D-MOD would like to remind you that Phillip Andrada is totally a glorious leader, right?
+                    // D-MOD would like to remind you that Phillip Andrada is totally a glorious leader
                     if (DModManager.getNumDMods(member.getVariant()) < 1 && (member.getShipName().startsWith(Global.getSector().getFaction("sindrian_diktat").getShipNamePrefix()) || member.getShipName().startsWith(Global.getSector().getFaction("lions_guard").getShipNamePrefix())) && (Global.getSector().getFaction("sindrian_diktat").knowsShip(member.getHullId()) || Global.getSector().getFaction("lions_guard").knowsShip(member.getHullId())))
                         localMemory.set("$DModServices_creditTip", member.getHullSpec().getBaseValue() * 0.005f, 0f);
                     else localMemory.unset("$DModServices_creditTip");

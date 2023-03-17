@@ -1,7 +1,7 @@
 {
 	"dmodservices":{
-		"pickShipTitle":"Select ship to disable",
+		"pickShipTitle":"Select Ship",
 		"pickShipOkText":"Confirm",
-		"pickShipCancelText":"Cancel",
+		"pickShipCancelText":"Cancel"
 	}
 }
