@@ -1,0 +1,13 @@
+{
+	"masterVersionFile":"https://raw.githubusercontent.com/Tranquiliti/DMODServices/main/dmodservices.version",
+	"modName":"dmodservices",
+	"modThreadId":-1,
+	"modVersion":
+	{
+		"major":0,
+		"minor":1,
+		"patch":0
+	},
+	"starsectorVersion":"0.95.1a-RC6",
+	"directDownloadURL":"",
+}
