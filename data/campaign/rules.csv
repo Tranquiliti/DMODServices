@@ -3,7 +3,8 @@ id,trigger,conditions,script,text,options,notes
 dmodservices_marketOptDModServices,PopulateOptions,"$hasMarket
 $marketSize >= 6
 $menuState == main
-$tradeMode == OPEN",,,30:dmodservices:Visit the D-MOD service center,"D-MOD only does business in size 6+ planets, as they don't have enough customers in worlds with a smaller population."
+$tradeMode == OPEN",,,30:dmodservices:Visit the D-MOD service center,"D-MOD only does business in size 6+ markets, as they don't
+have enough customers in worlds with a smaller population."
 dmodservices_marketOptDModServicesSel,DialogOptionSelected,$option == dmodservices,"DModServicesShowPlayerFleet
 FireAll PopulateDModServicesOptions","You enter the D-MOD service center to seek out a representative. D-MOD employees welcome any spacers who offer ships as temporary target practice, and these employees love nothing more than to watch the lightshow as an array of spaceship weaponry bombards a hapless hull. Barring that, the more technical and savvy workers seek out ships to creatively ""modify"", a desire largely satisfied by superstitious (yet wealthy) space captains who think that a broken-down ship performs better than a pristine one.",,
 dmodservices_marketOptDModServicesSelAlt,DialogOptionSelected,"$option == dmodservices
@@ -13,7 +14,7 @@ FireAll PopulateDModServicesOptions","Despite operating within what they see as 
 ,,,,,,
 # D-MOD service options,,,,,,
 dmodservices_RandomDisableOption,PopulateDModServicesOptions,,,,dmodservicesRandom:Offer one of your own ships as target practice,
-dmodservices_PreciseDisableOption,PopulateDModServicesOptions,,,,dmodservicesPrecise:Employ ship-breakers to selectively damage a ship,
+dmodservices_PreciseDisableOption,PopulateDModServicesOptions,,,,"dmodservicesPrecise:Request ""special modifications"" for a ship",
 dmodservices_Leave,PopulateDModServicesOptions,,"SetShortcut dmodservicesLeave ""ESCAPE""",,dmodservicesLeave:Leave the service center,
 dmodservices_LeaveSel,DialogOptionSelected,$option == dmodservicesLeave,"ShowDefaultVisual
 FireAll PopulateOptions",,,Going back to market main menu
@@ -45,7 +46,8 @@ SetTooltip dmodservicesRandomConfirm ""Disables the selected ship and applies a 
 SetTextHighlights $DModServices_credits",The D-MOD representative calculates that you may receive $DModServices_credits credits as compensation.,,"Enable ""Confirm"" option if a ship is picked"
 dmodservices_RandomDisableShipNotEligible,DModServicesPickedShip,"$DModServices_pickedShip != null
 $DModServices_doRandomDMod
-$DModServices_notEligible","SetTooltip dmodservicesRandomConfirm ""Ship cannot receive any more D-Mods from this service!""","The D-MOD representative tells you that your selected ship, unfortunately, cannot be used as target practice, as it is far too damaged to remain recoverable after a demonstration.",,Disallow the ship
+$DModServices_notEligible","SetEnabled dmodservicesRandomConfirm false
+SetTooltip dmodservicesRandomConfirm ""Ship cannot receive any more D-Mods from this service!""","The D-MOD representative tells you that your selected ship, unfortunately, cannot be used as target practice, as it is far too damaged to remain recoverable after a demonstration.",,Disallow the ship
 dmodservices_RandomDisableConfirmSel,DialogOptionSelected,$option == dmodservicesRandomConfirm,"DModServicesAddRandomDMod
 AddCredits $DModServices_credits
 DModServicesShowPlayerFleet
@@ -76,12 +78,16 @@ dmodservices_PreciseDisablePickShipSel,DialogOptionSelected,$option == dmodservi
 dmodservices_PreciseDisablePickedShip,DModServicesPickedShip,"$DModServices_pickedShip != null
 !$DModServices_doRandomDMod","SetEnabled dmodservicesPrecisePickDMod true
 SetTooltip dmodservicesPrecisePickDMod """"
+SetEnabled dmodservicesPreciseConfirm false
 SetTooltip dmodservicesPreciseConfirm ""Must select a D-Mod first!""
 SetTextHighlights $DModServices_credits
 unset $DModServices_pickedDMod",The D-MOD representative calculates that your selected ship requires $DModServices_credits credits to service it.,,"Enable ""Select a D-Mod"" option if a ship is picked"
 dmodservices_PreciseDisableShipNotEligible,DModServicesPickedShip,"$DModServices_pickedShip != null
 !$DModServices_doRandomDMod
-$DModServices_notEligible","SetTooltip dmodservicesPrecisePickDMod ""Ship already has maximum number of D-Mods!""","The D-MOD representative tells you that your selected ship, unfortunately, cannot be damaged any further without risking a complete ship collapse.",,Disallow the ship
+$DModServices_notEligible","SetEnabled dmodservicesPrecisePickDMod false
+SetTooltip dmodservicesPrecisePickDMod ""Ship already has maximum number of D-Mods!""
+SetEnabled dmodservicesPreciseConfirm false
+SetTooltip dmodservicesPrecisePickDMod ""Ship already has maximum number of D-Mods!""","The D-MOD representative tells you that your selected ship, unfortunately, cannot be damaged any further without risking a complete ship collapse.",,Disallow the ship
 dmodservices_PreciseDisablePickDModSel,DialogOptionSelected,$option == dmodservicesPrecisePickDMod,DModServicesShowDModPicker,,,Need to implement D-Mod selection
 dmodservices_PreciseDisablePickedDMod,DModServicesPickedDMod,"$DModServices_pickedShip != null
 $DModServices_pickedDMod != null","SetEnabled dmodservicesPreciseConfirm true
@@ -89,4 +95,4 @@ SetTooltip dmodservicesPreciseConfirm ""Adds the selected D-Mod to the ship""",,
 dmodservices_PreciseDisableConfirmSel,DialogOptionSelected,$option == dmodservicesPreciseConfirm,"DModServicesAddSelectedDMod
 AddCredits -$DModServices_credits
 DModServicesShowPlayerFleet
-FireAll PopulateDModServicesPreciseOptions","Your ship now has D-Mods, yay!",,Adds the selected D-Mod to the selected ship
+FireAll PopulateDModServicesPreciseOptions","You have sent your ship to the D-MOD's specialized engineers. Soon enough, your TriPad chimes with a notiifcation; your ship has now received its ""special modifications""!",,Adds the selected D-Mod to the selected ship
