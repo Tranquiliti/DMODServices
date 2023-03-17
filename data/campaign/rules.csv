@@ -77,7 +77,7 @@ dmodservices_PreciseDisablePickShipSel,DialogOptionSelected,$option == dmodservi
 # Selected ship,,,,,,
 dmodservices_PreciseDisablePickedShip,DModServicesPickedShip,"$DModServices_pickedShip != null
 !$DModServices_doRandomDMod","SetEnabled dmodservicesPrecisePickDMod true
-SetTooltip dmodservicesPrecisePickDMod """"
+SetTooltip dmodservicesPrecisePickDMod ""Must select a ship first!""
 SetEnabled dmodservicesPreciseConfirm false
 SetTooltip dmodservicesPreciseConfirm ""Must select a D-Mod first!""
 SetTextHighlights $DModServices_credits
@@ -87,7 +87,7 @@ dmodservices_PreciseDisableShipNotEligible,DModServicesPickedShip,"$DModServices
 $DModServices_notEligible","SetEnabled dmodservicesPrecisePickDMod false
 SetTooltip dmodservicesPrecisePickDMod ""Ship already has maximum number of D-Mods!""
 SetEnabled dmodservicesPreciseConfirm false
-SetTooltip dmodservicesPrecisePickDMod ""Ship already has maximum number of D-Mods!""","The D-MOD representative tells you that your selected ship, unfortunately, cannot be damaged any further without risking a complete ship collapse.",,Disallow the ship
+SetTooltip dmodservicesPreciseConfirm ""Ship already has maximum number of D-Mods!""","The D-MOD representative tells you that your selected ship, unfortunately, cannot be damaged any further without risking a complete ship collapse.",,Disallow the ship
 dmodservices_PreciseDisablePickDModSel,DialogOptionSelected,$option == dmodservicesPrecisePickDMod,DModServicesShowDModPicker,,,Need to implement D-Mod selection
 dmodservices_PreciseDisablePickedDMod,DModServicesPickedDMod,"$DModServices_pickedShip != null
 $DModServices_pickedDMod != null","SetEnabled dmodservicesPreciseConfirm true

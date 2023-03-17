@@ -34,6 +34,7 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
                 if (members.isEmpty()) return;
 
                 FleetMemberAPI member = members.get(0);
+                dialog.getVisualPanel().showFleetMemberInfo(member, false);
 
                 MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
                 localMemory.set("$DModServices_pickedShip", member, 0f);
@@ -42,11 +43,17 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
                 localMemory.set("$DModServices_doRandomDMod", isRandom, 0f);
 
                 List<HullModSpecAPI> potentialDMods = getPotentialDMods(member.getVariant(), !isRandom);
-                localMemory.set("$DModServices_eligibleDMods", potentialDMods, 0f);
 
                 if (DModManager.getNumDMods(member.getVariant()) >= DModManager.MAX_DMODS_FROM_COMBAT || potentialDMods.isEmpty())
                     localMemory.set("$DModServices_notEligible", true, 0f);
-                else localMemory.unset("$DModServices_notEligible");
+                else {
+                    localMemory.unset("$DModServices_notEligible");
+
+                    String[] dModIds = new String[potentialDMods.size()];
+                    for (int i = 0; i < dModIds.length; i++) dModIds[i] = potentialDMods.get(i).getId();
+                    localMemory.set("$DModServices_eligibleDMods", dModIds, 0f);
+                }
+
 
                 float credits;
                 if (isRandom) {
@@ -62,7 +69,6 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
                 } else credits = member.getHullSpec().getBaseValue();
                 localMemory.set("$DModServices_credits", Misc.getWithDGS(credits), 0f);
 
-                dialog.getVisualPanel().showFleetMemberInfo(member, false);
                 FireBest.fire(null, dialog, memoryMap, "DModServicesPickedShip");
             }
 
@@ -87,9 +93,6 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
 
         if (variant.getHullSpec().isPhase())
             potentialMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE_PHASE));
-
-        // Some evil mod might add Carrier-always D-Mods, so account for that
-        if (variant.isCarrier()) potentialMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_CARRIER_ALWAYS));
 
         // Destroyed ships always get these D-Mods, so put them in list if allowed
         if (canAddDestroyedMods) potentialMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_DESTROYED_ALWAYS));

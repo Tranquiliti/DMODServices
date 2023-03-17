@@ -5,27 +5,24 @@ import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.rules.MemKeys;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
-import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-@SuppressWarnings({"unused", "unchecked"})
+@SuppressWarnings("unused")
 public class DModServicesAddRandomDMod extends BaseCommandPlugin {
     @Override
     public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
         if (dialog == null) return false;
 
-        MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
-
         // Add a random D-Mod from the potential D-Mod list
-        // TODO: set this to a defined Random to mitigate save-scumming
-        List<HullModSpecAPI> potentialDMods = (List<HullModSpecAPI>) localMemory.get("$DModServices_eligibleDMods");
-        String pickId = potentialDMods.get(new Random().nextInt(potentialDMods.size())).getId();
+        FleetMemberAPI member = (FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get("$DModServices_pickedShip");
+        if (member.getStatus().getRandom() == null) member.getStatus().setRandom(new Random());
 
-        FleetMemberAPI member = (FleetMemberAPI) localMemory.get("$DModServices_pickedShip");
+        String[] potentialDMods = (String[]) memoryMap.get(MemKeys.LOCAL).get("$DModServices_eligibleDMods");
+        String pickId = potentialDMods[member.getStatus().getRandom().nextInt(potentialDMods.length)];
         member.getVariant().removeSuppressedMod(pickId);
         member.getVariant().addPermaMod(pickId, false);
 
