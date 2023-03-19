@@ -1,0 +1,3 @@
+modID,fieldID,fieldName,fieldType,defaultValue,fieldDescription,minValue,maxValue
+dmodservices,dmodservices_EnableDMODServices,Enable D-MOD Services,Boolean,true,"Enables access to D-MOD service centers in [Size 6+ markets]. Disable this if your main market menu is getting too cluttered due to other mods, or if you do not plan on using the services during this playthrough.",,
+dmodservices,dmodservices_selectDModCostMult,D-MOD Select D-Mod Cost Multiplier,Double,1.0,Cost multiplier for adding a selected D-Mod to a ship.,0,10

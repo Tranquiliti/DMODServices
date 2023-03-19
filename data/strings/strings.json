@@ -1,7 +1,9 @@
 {
 	"dmodservices":{
-		"pickShipTitle":"Select Ship",
+		"pickShipTitle":"Select ship",
 		"pickShipOkText":"Confirm",
-		"pickShipCancelText":"Cancel"
+		"pickShipCancelText":"Cancel",
+		"confirmRandomDModHidden":"\"After you receive back your now-damaged ship, your double-check your received compensation, only to realize it's slightly higher than expected. Perhaps the D-MOD center wanted to thank you for providing this opportunity to them?\"",
+		"pickDModDesc":"The selected ship can receive the following D-Mods:"
 	}
 }

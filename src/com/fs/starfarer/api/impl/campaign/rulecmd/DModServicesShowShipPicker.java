@@ -11,6 +11,7 @@ import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
+import lunalib.lunaSettings.LunaSettings;
 
 import java.util.*;
 
@@ -44,30 +45,31 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
 
                 List<HullModSpecAPI> potentialDMods = getPotentialDMods(member.getVariant(), !isRandom);
 
+                // Ignore doing the other steps if ship is ineligible
                 if (DModManager.getNumDMods(member.getVariant()) >= DModManager.MAX_DMODS_FROM_COMBAT || potentialDMods.isEmpty())
                     localMemory.set("$DModServices_notEligible", true, 0f);
-                else {
+                else { // Ship is eligible
                     localMemory.unset("$DModServices_notEligible");
 
                     String[] dModIds = new String[potentialDMods.size()];
                     for (int i = 0; i < dModIds.length; i++) dModIds[i] = potentialDMods.get(i).getId();
                     localMemory.set("$DModServices_eligibleDMods", dModIds, 0f);
+
+                    float credits;
+                    if (isRandom) // Adding a random D-Mod; TODO: make this more accurate by calculating hull repair time
+                        credits = member.getStatus().getHullFraction() > 0.05f ? member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec("supplies").getBasePrice() : 10f;
+                    else {  // Get cost for selecting a D-Mod
+                        Float multiplier;
+                        if (Global.getSettings().getModManager().isModEnabled("lunalib")) {
+                            multiplier = LunaSettings.getFloat("dmodservices", "dmodservices_selectDModCostMult");
+                            if (multiplier == null)
+                                multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
+                        } else multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
+
+                        credits = member.getHullSpec().getBaseValue() * multiplier;
+                    }
+                    localMemory.set("$DModServices_credits", Misc.getWithDGS(credits), 0f);
                 }
-
-
-                float credits;
-                if (isRandom) {
-                    // TODO: make this more accurate by calculating hull repair time
-                    if (member.getStatus().getHullFraction() > 0.05f)
-                        credits = member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec("supplies").getBasePrice();
-                    else credits = 10f;
-
-                    // D-MOD would like to remind you that Phillip Andrada is totally a glorious leader
-                    if (DModManager.getNumDMods(member.getVariant()) < 1 && (member.getShipName().startsWith(Global.getSector().getFaction("sindrian_diktat").getShipNamePrefix()) || member.getShipName().startsWith(Global.getSector().getFaction("lions_guard").getShipNamePrefix())) && (Global.getSector().getFaction("sindrian_diktat").knowsShip(member.getHullId()) || Global.getSector().getFaction("lions_guard").knowsShip(member.getHullId())))
-                        localMemory.set("$DModServices_creditTip", member.getHullSpec().getBaseValue() * 0.005f, 0f);
-                    else localMemory.unset("$DModServices_creditTip");
-                } else credits = member.getHullSpec().getBaseValue();
-                localMemory.set("$DModServices_credits", Misc.getWithDGS(credits), 0f);
 
                 FireBest.fire(null, dialog, memoryMap, "DModServicesPickedShip");
             }
