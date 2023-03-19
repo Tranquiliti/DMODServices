@@ -1,0 +1,14 @@
+#--Note for LunaLib users--#
+# The LunaLib settings overrides the settings here.
+# Use LunaLib's in-game UI configs to toggle these instead.
+
+{
+	# Enables access to D-MOD service centers in Size 6+ markets.
+	# Disable this if your main market menu is getting too cluttered due to other mods
+	# or if you do not plan on using the services during your current playthrough.
+	"dmodservicesEnableDMODServices":true,
+
+	# Cost multiplier for adding a selected D-Mod to a ship.
+	# Defaults to base credit value of a pristine ship
+	"dmodservicesSelectDModCostMult":1.0,
+}

@@ -16,9 +16,8 @@ public class DModServicesAddSelectedDMod extends BaseCommandPlugin {
     public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
         if (dialog == null) return false;
 
-        MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
-        FleetMemberAPI member = (FleetMemberAPI) localMemory.get("$DModServices_pickedShip");
-        String pickId = localMemory.getString("$DModServices_pickedDMod");
+        FleetMemberAPI member = (FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get("$DModServices_pickedShip");
+        String pickId = memoryMap.get(MemKeys.LOCAL).getString("$DModServices_pickedDMod");
         member.getVariant().removeSuppressedMod(pickId);
         member.getVariant().addPermaMod(pickId, false);
 
