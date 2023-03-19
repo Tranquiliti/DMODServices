@@ -38,6 +38,9 @@ public class DModServicesShowDModPicker extends BaseCommandPlugin {
         localMemory.set("$DModServices_pickedDModDisplay", Global.getSettings().getHullModSpec(pickId).getDisplayName(), 0f);
 
         FireBest.fire(null, dialog, memoryMap, "DModServicesPickedDMod");
+
+        // Confirmation popup to prevent accidental confirms
+        dialog.getOptionPanel().addOptionConfirmation("dmodservicesPreciseConfirm", Global.getSettings().getString("dmodservices", "confirmDModPrecise") + Global.getSettings().getHullModSpec(pickId).getDisplayName() + ".", Global.getSettings().getString("dmodservices", "confirmDModYes"), Global.getSettings().getString("dmodservices", "confirmDModNo"));
         return true;
     }
 }

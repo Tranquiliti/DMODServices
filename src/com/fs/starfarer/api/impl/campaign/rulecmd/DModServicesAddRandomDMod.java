@@ -8,7 +8,6 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.util.Misc;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -38,9 +37,11 @@ public class DModServicesAddRandomDMod extends BaseCommandPlugin {
         // D-MOD would like to remind you that Phillip Andrada is totally a glorious leader, right?
         String factionId = memoryMap.get(MemKeys.FACTION).getString("$id");
         if (addHidden && factionId != null && !factionId.equals("sindrian_diktat")) {
-            new AddCredits().execute(null, dialog, new ArrayList<>(Misc.tokenize(Float.toString(member.getHullSpec().getBaseValue() * 0.005f))), memoryMap);
-            new AddText().execute(null, dialog, new ArrayList<>(Misc.tokenize(Global.getSettings().getString("dmodservices", "confirmRandomDModHidden"))), memoryMap);
+            new AddCredits().execute(null, dialog, Misc.tokenize(Float.toString(member.getHullSpec().getBaseValue() * 0.005f)), memoryMap);
+            new AddText().execute(null, dialog, Misc.tokenize(Global.getSettings().getString("dmodservices", "confirmRandomDModHidden")), memoryMap);
         }
+
+        memoryMap.get(MemKeys.LOCAL).set("$DModServices_pickedDModDisplay", Global.getSettings().getHullModSpec(pickId).getDisplayName(), 0f);
 
         Global.getSoundPlayer().playUISound("ui_raid_finished", 0.5f, 2f);
         return true;

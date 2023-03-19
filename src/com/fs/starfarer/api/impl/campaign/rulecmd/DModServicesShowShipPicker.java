@@ -56,9 +56,12 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
                     localMemory.set("$DModServices_eligibleDMods", dModIds, 0f);
 
                     float credits;
-                    if (isRandom) // Adding a random D-Mod; TODO: make this more accurate by calculating hull repair time
+                    if (isRandom) { // Adding a random D-Mod
                         credits = member.getStatus().getHullFraction() > 0.05f ? member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec("supplies").getBasePrice() : 10f;
-                    else {  // Get cost for selecting a D-Mod
+
+                        // Confirmation popup to prevent accidental confirms
+                        dialog.getOptionPanel().addOptionConfirmation("dmodservicesRandomConfirm", Global.getSettings().getString("dmodservices", "confirmDModRandom"), Global.getSettings().getString("dmodservices", "confirmDModYes"), Global.getSettings().getString("dmodservices", "confirmDModNo"));
+                    } else {  // Get cost for selecting a D-Mod
                         Float multiplier;
                         if (Global.getSettings().getModManager().isModEnabled("lunalib")) {
                             multiplier = LunaSettings.getFloat("dmodservices", "dmodservices_selectDModCostMult");
@@ -66,7 +69,8 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
                                 multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
                         } else multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
 
-                        credits = member.getHullSpec().getBaseValue() * multiplier;
+                        float dModMultiplier = Math.min(DModManager.getNumDMods(member.getVariant()) * 0.2f + 0.5f, 1.0f);
+                        credits = dModMultiplier * member.getHullSpec().getBaseValue() * multiplier;
                     }
                     localMemory.set("$DModServices_credits", Misc.getWithDGS(credits), 0f);
                 }
