@@ -26,7 +26,7 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
         String title = Global.getSettings().getString("dmodservices", "pickShipTitle");
         String okText = Global.getSettings().getString("dmodservices", "pickShipOkText");
         String cancelText = Global.getSettings().getString("dmodservices", "pickShipCancelText");
-        int cols = 5;
+        int cols = Math.max(Math.min(members.size(), 7), 4);
         int rows = (members.size() - 1) / cols + 1;
 
         dialog.showFleetMemberPickerDialog(title, okText, cancelText, rows, cols, 96, true, false, members, new FleetMemberPickerListener() {
