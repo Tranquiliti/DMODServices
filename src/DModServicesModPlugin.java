@@ -8,7 +8,7 @@ public class DModServicesModPlugin extends BaseModPlugin {
     public void onGameLoad(boolean newGame) {
         Boolean enabled = null;
         if (Global.getSettings().getModManager().isModEnabled("lunalib")) {
-            enabled = LunaSettings.getBoolean("dmodservices", "dmodservices_EnableDMODServices");
+            enabled = LunaSettings.getBoolean("dmodservices", "enableDMODServices");
             new DModServicesLunaSettingsListener();
         }
 
