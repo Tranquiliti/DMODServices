@@ -5,10 +5,10 @@
 	"modVersion":
 	{
 		"major":0,
-		"minor":1,
-		"patch":2
+		"minor":2,
+		"patch":0
 	},
-	"starsectorVersion":"0.95.1a-RC6",
-	"directDownloadURL":"https://github.com/Tranquiliti/DMODServices/releases/download/v0.1.2/DMODServices-v0.1.2.zip",
+	"starsectorVersion":"0.96a-RC6",
+	"directDownloadURL":"https://github.com/Tranquiliti/DMODServices/releases/download/v0.2.0/DMODServices-v0.2.0.zip",
 	"changelogURL":"https://raw.githubusercontent.com/Tranquiliti/DMODServices/main/changelog.txt"
 }

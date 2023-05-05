@@ -17,7 +17,57 @@ public class DModServicesShowDModPicker extends BaseCommandPlugin {
         if (dialog == null) return false;
 
         MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
-        String[] potentialDMods = (String[]) localMemory.get("$DModServices_eligibleDMods");
+        final String[] potentialDMods = (String[]) localMemory.get("$DModServices_eligibleDMods");
+
+        // TODO: Work on this after the 0.96 update
+        /*
+        final float panelWidth = 350f;
+        final float panelHeight = 300f;
+        dialog.showCustomDialog(panelWidth, panelHeight, new CustomDialogDelegate() {
+
+            TooltipMakerAPI tooltip;
+
+
+            @Override
+            public void createCustomDialog(CustomPanelAPI panel) {
+                tooltip = panel.createUIElement(panelWidth, panelHeight, true);
+                for (String potentialDMod : potentialDMods) {
+                    String displayText = Global.getSettings().getHullModSpec(potentialDMod).getDisplayName();
+                    tooltip.addAreaCheckbox(displayText, potentialDMod, Misc.getButtonTextColor(), Misc.getGrayColor(), Misc.getHighlightedOptionColor(), panelWidth - 25f, 25f, 10f);
+                    tooltip.getPrev();
+                }
+
+                panel.addUIElement(tooltip);
+            }
+
+            @Override
+            public boolean hasCancelButton() {
+                return true;
+            }
+
+            @Override
+            public String getConfirmText() {
+                return Global.getSettings().getString("dmodservices", "pickShipOkText");
+            }
+
+            @Override
+            public String getCancelText() {
+                return Global.getSettings().getString("dmodservices", "pickShipCancelText");
+            }
+
+            @Override
+            public void customDialogConfirm() {
+            }
+
+            @Override
+            public void customDialogCancel() {
+            }
+
+            @Override
+            public CustomUIPanelPlugin getCustomPanelPlugin() {
+                return null;
+            }
+        }); */
 
         // Interim solution for selecting D-Mods (hopefully until I set up a proper selection dialog or something) <- LOL
         if (!localMemory.contains("$DModServices_pickedDMod")) {

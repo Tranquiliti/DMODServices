@@ -1,7 +1,7 @@
-Version 0.1.2
+Version 0.2.0
 
-* Updated LunaLib compatibility
-  - Note that setting IDs have been changed, so you may need to set your LunaLib settings for this mod again.
+* Updated to Starsector 0.96a-RC6
+* Changed price scaling for adding a selected D-Mod; should be cheaper overall.
 
 
 
