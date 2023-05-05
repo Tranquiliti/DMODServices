@@ -1,0 +1,17 @@
+Version 0.2.0
+
+* Updated to Starsector 0.96a-RC6
+* Changed price scaling for adding a selected D-Mod; should be cheaper overall.
+
+
+
+Version 0.1.1
+
+* Ship selection screen now shows at most 7 ships per row (from 5), to match the "Your fleet" screen.
+* Other, very minor changes
+
+
+
+Version 0.1.0
+
+* Initial release

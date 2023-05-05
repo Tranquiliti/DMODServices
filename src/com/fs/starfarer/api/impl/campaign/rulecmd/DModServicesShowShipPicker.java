@@ -21,11 +21,11 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
     public boolean execute(String ruleId, final InteractionDialogAPI dialog, final List<Misc.Token> params, final Map<String, MemoryAPI> memoryMap) {
         if (dialog == null) return false;
 
-        ArrayList<FleetMemberAPI> members = new ArrayList<>(Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy());
-
         String title = Global.getSettings().getString("dmodservices", "pickShipTitle");
         String okText = Global.getSettings().getString("dmodservices", "pickShipOkText");
         String cancelText = Global.getSettings().getString("dmodservices", "pickShipCancelText");
+
+        ArrayList<FleetMemberAPI> members = new ArrayList<>(Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy());
         int cols = Math.max(Math.min(members.size(), 7), 4);
         int rows = (members.size() - 1) / cols + 1;
 
@@ -64,12 +64,12 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
                     } else {  // Get cost for selecting a D-Mod
                         Float multiplier;
                         if (Global.getSettings().getModManager().isModEnabled("lunalib")) {
-                            multiplier = LunaSettings.getFloat("dmodservices", "dmodservices_selectDModCostMult");
+                            multiplier = LunaSettings.getFloat("dmodservices", "selectDModCostMult");
                             if (multiplier == null)
                                 multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
                         } else multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
 
-                        float dModMultiplier = Math.min(DModManager.getNumDMods(member.getVariant()) * 0.2f + 0.5f, 1.0f);
+                        float dModMultiplier = Math.min(0.4f + DModManager.getNumDMods(member.getVariant()) * 0.15f, 1.0f);
                         credits = dModMultiplier * member.getHullSpec().getBaseValue() * multiplier;
                     }
                     localMemory.set("$DModServices_credits", Misc.getWithDGS(credits), 0f);
@@ -99,6 +99,8 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
 
         if (variant.getHullSpec().isPhase())
             potentialMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE_PHASE));
+
+        if (variant.isCarrier()) potentialMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_CARRIER_ALWAYS));
 
         // Destroyed ships always get these D-Mods, so put them in list if allowed
         if (canAddDestroyedMods) potentialMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_DESTROYED_ALWAYS));

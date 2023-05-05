@@ -9,7 +9,7 @@ public class DModServicesLunaSettingsListener implements LunaSettingsListener {
 
     @Override
     public void settingsChanged(String modId) {
-        if (Boolean.FALSE.equals(LunaSettings.getBoolean(modId, "dmodservices_EnableDMODServices")))
+        if (Boolean.FALSE.equals(LunaSettings.getBoolean(modId, "enableDMODServices")))
             Global.getSector().getMemoryWithoutUpdate().set("$DModServices_disabled", true);
         else Global.getSector().getMemoryWithoutUpdate().unset("$DModServices_disabled");
     }
