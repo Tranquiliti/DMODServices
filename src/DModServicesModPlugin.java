@@ -5,13 +5,16 @@ import lunalib.lunaSettings.LunaSettings;
 @SuppressWarnings("unused")
 public class DModServicesModPlugin extends BaseModPlugin {
     @Override
+    public void onApplicationLoad() {
+        if (Global.getSettings().getModManager().isModEnabled("lunalib"))
+            LunaSettings.addSettingsListener(new DModServicesLunaSettingsListener());
+    }
+
+    @Override
     public void onGameLoad(boolean newGame) {
         Boolean enabled = null;
-        if (Global.getSettings().getModManager().isModEnabled("lunalib")) {
+        if (Global.getSettings().getModManager().isModEnabled("lunalib"))
             enabled = LunaSettings.getBoolean("dmodservices", "enableDMODServices");
-            new DModServicesLunaSettingsListener();
-        }
-
         if (enabled == null) enabled = Global.getSettings().getBoolean("dmodservicesEnableDMODServices");
 
         // Add memory key only if disabling, since enable is default and likely to stay true for most players

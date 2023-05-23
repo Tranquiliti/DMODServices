@@ -3,6 +3,7 @@ Version 0.3.0
 * Changed select D-Mod picker to use an actual selection screen.
   - Still only one D-Mod that can be picked at a time; if multiple are selected, only the top-most D-Mod will be chosen.
   - Obviously not ideal, but, IMO, an improvement from needing to cycle through the same button many times.
+* Updated LunaLib compatibility; mod now requires at least LunaLib v1.7.4
 
 
 
