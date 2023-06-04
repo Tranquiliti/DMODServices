@@ -7,6 +7,7 @@
 		"pickDModDesc":"The selected ship can receive the following D-Mods:",
 		"confirmDModRandom":"Confirm? The selected ship will receive a random D-Mod.",
 		"confirmDModPrecise":"Confirm? The selected ship will receive ",
+		"confirmAutomate":"Confirm? The selected will become fully-automated and receive a random D-Mod. In addition, it will no longer be possible to restore the ship back to pristine condition.",
 		"confirmDModYes":"Yes",
 		"confirmDModNo":"Never mind"
 	}
