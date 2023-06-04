@@ -21,5 +21,15 @@ public class DModServicesModPlugin extends BaseModPlugin {
         // (This could/should be transient, but it's only one boolean memory key, so it shouldn't be a serious problem either way)
         if (!enabled) Global.getSector().getMemoryWithoutUpdate().set("$DModServices_disabled", true);
         else Global.getSector().getMemoryWithoutUpdate().unset("$DModServices_disabled");
+
+        Boolean enableAutomate = null;
+        if (Global.getSettings().getModManager().isModEnabled("lunalib"))
+            enableAutomate = LunaSettings.getBoolean("dmodservices", "enableAutomateOption");
+        if (enableAutomate == null)
+            enableAutomate = Global.getSettings().getBoolean("dmodservicesEnableAutomateOption");
+
+        // Similar deal here
+        if (enableAutomate) Global.getSector().getMemoryWithoutUpdate().set("$DModServices_enableAutomate", true);
+        else Global.getSector().getMemoryWithoutUpdate().unset("$DModServices_enableAutomate");
     }
 }

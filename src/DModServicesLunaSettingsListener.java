@@ -11,5 +11,9 @@ public class DModServicesLunaSettingsListener implements LunaSettingsListener {
         if (Boolean.FALSE.equals(LunaSettings.getBoolean(modId, "enableDMODServices")))
             Global.getSector().getMemoryWithoutUpdate().set("$DModServices_disabled", true);
         else Global.getSector().getMemoryWithoutUpdate().unset("$DModServices_disabled");
+
+        if (Boolean.TRUE.equals(LunaSettings.getBoolean(modId, "enableAutomateOption")))
+            Global.getSector().getMemoryWithoutUpdate().set("$DModServices_enableAutomate", true);
+        else Global.getSector().getMemoryWithoutUpdate().unset("$DModServices_enableAutomate");
     }
 }

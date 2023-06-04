@@ -1,3 +1,14 @@
+Version 0.4.0
+
+* Added the "makeUnrestorable" option to settings.json and LunaSettings
+  - Disabled by default
+  - When enabled, the "Select a D-Mod" option also applies the 'Unrestorable' tag to the selected ship, preventing dockyard restoration and stopping the Hull Restoration skill from removing its D-Mods.
+* Added the option to fully-automate a ship when visiting a D-MOD service center
+  - Disabled by default
+  - Even when enabled, you must first discover and defeat a certain defender fleet before unlocking the option.
+
+
+
 Version 0.3.0
 
 * Changed select D-Mod picker to use an actual selection screen.

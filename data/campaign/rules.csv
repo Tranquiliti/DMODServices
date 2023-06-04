@@ -21,6 +21,8 @@ Despite operating within what they see as a controversial polity at best, the lo
 # D-MOD service options,,,,,,
 dmodservices_RandomDisableOption,PopulateDModServicesOptions,,,,dmodservicesRandom:Offer one of your own ships as target practice,
 dmodservices_PreciseDisableOption,PopulateDModServicesOptions,,,,"dmodservicesPrecise:Request ""special modifications"" for a ship",
+dmodservices_AutomateOption,PopulateDModServicesOptions,"$global.DModServices_enableAutomate
+$global.pkCacheDefendersDefeated",,,dmodservicesAutomate:Apply automated systems to a ship,Option only appears if a certain [REDACTED] fleet has been defeated
 dmodservices_Leave,PopulateDModServicesOptions,,"SetShortcut dmodservicesLeave ""ESCAPE""",,dmodservicesLeave:Leave the service center,
 dmodservices_LeaveSel,DialogOptionSelected,$option == dmodservicesLeave,"ShowDefaultVisual
 FireAll PopulateOptions",,,Going back to market main menu
@@ -43,16 +45,16 @@ dmodservices_RandomDisablePickShip,PopulateDModServicesRandomOptions,,,,dmodserv
 dmodservices_RandomDisableConfirm,PopulateDModServicesRandomOptions,,"SetEnabled dmodservicesRandomConfirm false
 SetTooltip dmodservicesRandomConfirm ""Must select a ship first!""",,dmodservicesRandomConfirm:Confirm,
 dmodservices_RandomDisableLeave,PopulateDModServicesRandomOptions,,"SetShortcut dmodservicesGoBack ""ESCAPE""",,dmodservicesGoBack:Go back,
-dmodservices_RandomDisablePickShipSel,DialogOptionSelected,$option == dmodservicesRandomPickShip,DModServicesShowShipPicker true,,,
+dmodservices_RandomDisablePickShipSel,DialogOptionSelected,$option == dmodservicesRandomPickShip,DModServicesShowShipPicker 1,,,
 ,,,,,,
-# Selected ship,,,,,,
+# Selected ship (Random),,,,,,
 dmodservices_RandomDisablePickedShip,DModServicesPickedShip,"$DModServices_pickedShip != null
-$DModServices_doRandomDMod","SetEnabled dmodservicesRandomConfirm true
+$DModServices_optionPicked == 1","SetEnabled dmodservicesRandomConfirm true
 SetTooltip dmodservicesRandomConfirm ""Disables the selected ship and applies a random D-Mod""
 SetTextHighlights $DModServices_credits",The D-MOD representative calculates that you may receive $DModServices_credits credits as compensation.,,"Enable ""Confirm"" option if a ship is picked"
 dmodservices_RandomDisableShipNotEligible,DModServicesPickedShip,"$DModServices_pickedShip != null
-$DModServices_doRandomDMod
-$DModServices_notEligible","SetEnabled dmodservicesRandomConfirm false
+$DModServices_optionPicked == 1
+$DModServices_notEligible == ""maxDMods""","SetEnabled dmodservicesRandomConfirm false
 SetTooltip dmodservicesRandomConfirm ""Ship cannot receive any more D-Mods from this service!""","The D-MOD representative tells you that your selected ship, unfortunately, cannot be used as target practice, as it is far too damaged to remain recoverable after a demonstration.",,Disallow the ship
 dmodservices_RandomDisableConfirmSel,DialogOptionSelected,$option == dmodservicesRandomConfirm,"AddCredits $DModServices_credits
 DModServicesAddRandomDMod
@@ -87,18 +89,18 @@ SetTooltip dmodservicesPrecisePickDMod ""Must select a ship first!""",,dmodservi
 dmodservices_PreciseDisableConfirm,PopulateDModServicesPreciseOptions,,"SetEnabled dmodservicesPreciseConfirm false
 SetTooltip dmodservicesPreciseConfirm ""Must select a ship and a D-Mod first!""",,dmodservicesPreciseConfirm:Confirm,
 dmodservices_PreciseDisableLeave,PopulateDModServicesPreciseOptions,,"SetShortcut dmodservicesGoBack ""ESCAPE""",,dmodservicesGoBack:Go back,
-dmodservices_PreciseDisablePickShipSel,DialogOptionSelected,$option == dmodservicesPrecisePickShip,DModServicesShowShipPicker false,,,
+dmodservices_PreciseDisablePickShipSel,DialogOptionSelected,$option == dmodservicesPrecisePickShip,DModServicesShowShipPicker 2,,,
 ,,,,,,
-# Selected ship,,,,,,
+# Selected ship (Precise),,,,,,
 dmodservices_PreciseDisablePickedShip,DModServicesPickedShip,"$DModServices_pickedShip != null
-!$DModServices_doRandomDMod","SetTextHighlights $DModServices_credits
+$DModServices_optionPicked == 2","SetTextHighlights $DModServices_credits
 SetEnabled dmodservicesPrecisePickDMod true
 SetTooltip dmodservicesPrecisePickDMod ""Select a compatible D-Mod from a list""
 SetEnabled dmodservicesPreciseConfirm false
 SetTooltip dmodservicesPreciseConfirm ""Must select a D-Mod first!""
 unset $DModServices_pickedDMod",The D-MOD representative calculates that your selected ship requires $DModServices_credits credits to service it.,,"Enable ""Select a D-Mod"" option if a ship is picked"
 dmodservices_PreciseDisableShipNoCredits,DModServicesPickedShip,"$DModServices_pickedShip != null
-!$DModServices_doRandomDMod
+$DModServices_optionPicked == 2
 $player.credits < $DModServices_credits","SetTextHighlights $DModServices_credits
 SetEnabled dmodservicesPrecisePickDMod false
 SetTooltip dmodservicesPrecisePickDMod ""Cannot afford this service!""
@@ -106,8 +108,8 @@ SetEnabled dmodservicesPreciseConfirm false
 SetTooltip dmodservicesPreciseConfirm ""Cannot afford this service!""
 unset $DModServices_pickedDMod","The D-MOD representative calculates that your selected ship requires $DModServices_credits credits to service it. However, you lack the credits necessary to pay for the service.",,Disallow the ship
 dmodservices_PreciseDisableShipNotEligible,DModServicesPickedShip,"$DModServices_pickedShip != null
-!$DModServices_doRandomDMod
-$DModServices_notEligible score:2","SetEnabled dmodservicesPrecisePickDMod false
+$DModServices_optionPicked == 2
+$DModServices_notEligible == ""maxDMods"" score:2","SetEnabled dmodservicesPrecisePickDMod false
 SetTooltip dmodservicesPrecisePickDMod ""Ship cannot receive any more D-Mods from this service!""
 SetEnabled dmodservicesPreciseConfirm false
 SetTooltip dmodservicesPreciseConfirm ""Ship cannot receive any more D-Mods from this service!""
@@ -124,3 +126,58 @@ AddTextSmall ""Selected ship now has $DModServices_pickedDModDisplay"" bad
 SetTextHighlights $DModServices_pickedDModDisplay
 DModServicesShowPlayerFleet
 FireAll PopulateDModServicesPreciseOptions","You have sent your ship to the D-MOD's specialized engineers. Soon enough, your TriPad chimes with a notiifcation; your ship has now received its ""special modifications""!",,Adds the selected D-Mod to the selected ship
+,,,,,,
+# Automating a ship (requires discovery of a certain defender fleet),,,,,,
+dmodservices_Automate,DialogOptionSelected,$option == dmodservicesAutomate,FireAll PopulateDModServicesAutomateOptions,"You ask if D-MOD's specialized technicians and engineers can automate one of your human-crewed ships. The D-MOD representative seems perplexed by your suggestion; you can even hear them musing to themself about whether D-MOD is bound to any treaties signed between the Hegemony and the Tri-Tachyon Corporation.
+
+After a short while, and to your surprise, the D-MOD representative finally requests that you bring to them any data that would assist the service in creating automated ships. It seems this particular D-MOD center is happy to offer their services to you, even if said services seem legally questionable to some Hegemony AI inspector.
+
+As you order your fleet technicians to transmit any and all data pertaining to automating human-crewed ships, the D-MOD representative warns you that such a specialized service comes with huge expenses - which, you suspect, is partially to pay off any potential AI inspections against the D-MOD center. And due to the lack of documentation and experience in automating ships, the automation process will not only result in some irrepairable damage to the ship, but the invasive nature of such automation will prevent any further ship restoration, so any ship damage inflicted during and after the process will forever remain with the ship.",,
+dmodservices_AutomatePickShip,PopulateDModServicesAutomateOptions,,,,dmodservicesAutomatePickShip:Select a ship,
+dmodservices_AutomateConfirm,PopulateDModServicesAutomateOptions,,"SetEnabled dmodservicesAutomateConfirm false
+SetTooltip dmodservicesAutomateConfirm ""Must select a ship first!""",,dmodservicesAutomateConfirm:Confirm,
+dmodservices_AutomateLeave,PopulateDModServicesAutomateOptions,,"SetShortcut dmodservicesGoBack ""ESCAPE""",,dmodservicesGoBack:Go back,
+dmodservices_AutomatePickShipSel,DialogOptionSelected,$option == dmodservicesAutomatePickShip,DModServicesShowShipPicker 3,,,
+,,,,,,
+# Selected ship (Automate),,,,,,
+dmodservices_AutomatePickedShip,DModServicesPickedShip,"$DModServices_pickedShip != null
+$DModServices_optionPicked == 3","SetEnabled dmodservicesAutomateConfirm true
+SetTooltip dmodservicesAutomateConfirm ""Automates the ship, applies a random D-Mod, and prevents any further restoration""
+SetTextHighlights $DModServices_credits",The D-MOD representative calculates that your selected ship requires $DModServices_credits credits to fully-automate it.,,"Enable ""Confirm"" option if a ship is picked"
+dmodservices_AutomateShipNoCredits,DModServicesPickedShip,"$DModServices_pickedShip != null
+$DModServices_optionPicked == 3
+$player.credits < $DModServices_credits","SetTextHighlights $DModServices_credits
+SetEnabled dmodservicesAutomateConfirm false
+SetTooltip dmodservicesAutomateConfirm ""Cannot afford this service!""
+unset $DModServices_pickedDMod","The D-MOD representative calculates that your selected ship requires $DModServices_credits credits to fully-automate it. However, you lack the credits necessary to pay for the service.",,Disallow the ship
+dmodservices_AutomateShipNotEligible,DModServicesPickedShip,"$DModServices_pickedShip != null
+$DModServices_optionPicked == 3
+$DModServices_notEligible == ""maxDMods""","SetEnabled dmodservicesAutomateConfirm false
+SetTooltip dmodservicesAutomateConfirm ""Ship has too many D-Mods to be automated!""","The D-MOD representative tells you that your selected ship, unfortunately, cannot be fully-automated, at least without turning it into a worthless pile of scrap.",,Disallow the ship
+dmodservices_AutomateShipNotEligibleAlreadyAuto,DModServicesPickedShip,"$DModServices_pickedShip != null
+$DModServices_optionPicked == 3
+$DModServices_notEligible == ""alreadyAutomated""","SetEnabled dmodservicesAutomateConfirm false
+SetTooltip dmodservicesAutomateConfirm ""Ship is already automated!""","The D-MOD representative tells you that your selected ship is already automated and, thus, does not need any further specialist work.",,Disallow the ship
+dmodservices_AutomateShipNotEligibleFlagship,DModServicesPickedShip,"$DModServices_pickedShip != null
+$DModServices_optionPicked == 3
+$DModServices_notEligible == ""noAutoFlagship""","SetEnabled dmodservicesAutomateConfirm false
+SetTooltip dmodservicesAutomateConfirm ""Flagship cannot be automated! Switch command to another ship to continue the process.""",The D-MOD representative tells you that your flagship cannot be fully-automated while you still command it. You will need to transfer command to another ship before the automation can be done without undue risk.,,Disallow the ship
+dmodservices_AutomateShipNotEligibleOfficer,DModServicesPickedShip,"$DModServices_pickedShip != null
+$DModServices_optionPicked == 3
+$DModServices_notEligible == ""officerInShip""","SetEnabled dmodservicesAutomateConfirm false
+SetTooltip dmodservicesAutomateConfirm ""Ship cannot be automated! Remove any officers in the ship to continue the process.""","The D-MOD representative tells you that your selected ship cannot be fully-automated while an officer still remains in command. For safety reasons, you will need to render your selected ship unofficered before any specialized automation can be applied.",,Disallow the ship
+dmodservices_AutomateShipNotEligibleIncompatibleDMod,DModServicesPickedShip,"$DModServices_pickedShip != null
+$DModServices_optionPicked == 3
+$DModServices_notEligible == ""incompatibleDMod""","SetEnabled dmodservicesAutomateConfirm false
+SetTooltip dmodservicesAutomateConfirm ""Ship cannot be automated due to an incompatible D-Mod or hull-mod! Restore the ship first to continue the process!""","The D-MOD representative tells you that your selected ship cannot be fully-automated, as some of the ship damage completely interferes with any attempted automation retooling. You may need to restore the ship to a pristine condition - or at least remove the offending damaged components - before any automation work can be done.",,Disallow the ship
+dmodservices_AutomateConfirmSel,DialogOptionSelected,$option == dmodservicesAutomateConfirm,"DModServicesAutomateShip
+AddTextSmall ""Selected ship now fully-automated!"" good
+AddTextSmall ""Selected ship now has $DModServices_pickedDModDisplay"" bad
+SetTextHighlights $DModServices_pickedDModDisplay
+AddTextSmall ""Selected ship now rendered unrestorable!"" bad
+DModServicesShowPlayerFleet
+FireAll PopulateDModServicesAutomateOptions","D-MOD's best and brightest technicians and engineers have begun work on automating your selected ship. Before long, the ship is now fully-automated, churning with the forbidden knowledge that had led to the First AI War.",,"Applies the ""Sentinel special"" to a ship"
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
