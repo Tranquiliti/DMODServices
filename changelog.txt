@@ -1,3 +1,12 @@
+Version 0.5.0
+
+* Adjusted the "Select D-Mod" picker:
+  - Now properly selects only one D-Mod at a time.
+  - Made it slimmer and taller, which, in most cases, lets it display all D-Mods without a scroller
+* Made ship selection picker go wider if player fleet currently has more than 30 ships.
+
+
+
 Version 0.4.0
 
 * Added the "makeUnrestorable" option to settings.json and LunaSettings
