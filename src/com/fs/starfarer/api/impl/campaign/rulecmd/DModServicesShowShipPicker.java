@@ -28,6 +28,7 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
 
         ArrayList<FleetMemberAPI> members = new ArrayList<>(Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy());
         int cols = Math.max(Math.min(members.size(), 7), 4);
+        if (members.size() > 30) cols = 14; // More than 30 ships, so just go wide instead
         int rows = (members.size() - 1) / cols + 1;
 
         dialog.showFleetMemberPickerDialog(title, okText, cancelText, rows, cols, 96, true, false, members, new FleetMemberPickerListener() {
