@@ -1,3 +1,9 @@
+Version 0.5.1
+
+* Ships now properly turn into their (D) variants when using D-MOD services.
+
+
+
 Version 0.5.0
 
 * Adjusted the "Select D-Mod" picker:
