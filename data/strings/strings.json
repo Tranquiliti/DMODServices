@@ -5,9 +5,9 @@
 		"pickShipCancelText":"Cancel",
 		"confirmRandomDModHidden":"\"After you receive back your now-damaged ship, your double-check your received compensation, only to realize it's slightly higher than expected. Perhaps the D-MOD center wanted to thank you for providing this opportunity to them?\"",
 		"pickDModDesc":"The selected ship can receive the following D-Mods:",
-		"confirmDModRandom":"Confirm? The selected ship will receive a random D-Mod.",
+		"confirmDModRandom":"Confirm? The selected ship will receive a random D-Mod as if it were disabled in-combat.",
 		"confirmDModPrecise":"Confirm? The selected ship will receive ",
-		"confirmAutomate":"Confirm? The selected will become fully-automated and receive a random D-Mod. In addition, it will no longer be possible to restore the ship back to pristine condition.",
+		"confirmAutomate":"Confirm? The selected ship will become fully-automated and receive a random D-Mod. In addition, the ship cannot be restored back to pristine condition.",
 		"confirmDModYes":"Yes",
 		"confirmDModNo":"Never mind"
 	}

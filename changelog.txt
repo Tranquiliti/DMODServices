@@ -1,6 +1,7 @@
 Version 0.5.1
 
 * Ships now properly turn into their (D) variants when using D-MOD services.
+* Made some confirmation dialogs more clear about what will result from the selected option
 
 
 
