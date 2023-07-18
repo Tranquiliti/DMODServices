@@ -5,6 +5,7 @@ import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.rules.MemKeys;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.util.Misc;
@@ -25,6 +26,7 @@ public class DModServicesAutomateShip extends BaseCommandPlugin {
         // Adda a random D-Mod to the ship
         String[] potentialDMods = (String[]) memoryMap.get(MemKeys.LOCAL).get("$DModServices_eligibleDMods");
         String pickId = potentialDMods[member.getStatus().getRandom().nextInt(potentialDMods.length)];
+        DModManager.setDHull(member.getVariant());
         member.getVariant().removeSuppressedMod(pickId);
         member.getVariant().addPermaMod(pickId, false);
 

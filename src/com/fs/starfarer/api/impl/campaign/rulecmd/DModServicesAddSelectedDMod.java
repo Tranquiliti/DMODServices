@@ -5,6 +5,7 @@ import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.rules.MemKeys;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.util.Misc;
 import lunalib.lunaSettings.LunaSettings;
@@ -20,6 +21,7 @@ public class DModServicesAddSelectedDMod extends BaseCommandPlugin {
 
         FleetMemberAPI member = (FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get("$DModServices_pickedShip");
         String pickId = memoryMap.get(MemKeys.LOCAL).getString("$DModServices_pickedDMod");
+        DModManager.setDHull(member.getVariant());
         member.getVariant().removeSuppressedMod(pickId);
         member.getVariant().addPermaMod(pickId, false);
 

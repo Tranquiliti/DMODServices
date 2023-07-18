@@ -22,6 +22,7 @@ public class DModServicesAddRandomDMod extends BaseCommandPlugin {
         FleetMemberAPI member = (FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get("$DModServices_pickedShip");
         if (member.getStatus().getRandom() == null) member.getStatus().setRandom(new Random());
 
+        DModManager.setDHull(member.getVariant());
         boolean addHidden = DModManager.getNumDMods(member.getVariant()) < 1 && (member.getShipName().startsWith(Global.getSector().getFaction("sindrian_diktat").getShipNamePrefix()) || member.getShipName().startsWith(Global.getSector().getFaction("lions_guard").getShipNamePrefix())) && (Global.getSector().getFaction("sindrian_diktat").knowsShip(member.getHullId()) || Global.getSector().getFaction("lions_guard").knowsShip(member.getHullId()));
 
         String[] potentialDMods = (String[]) memoryMap.get(MemKeys.LOCAL).get("$DModServices_eligibleDMods");
