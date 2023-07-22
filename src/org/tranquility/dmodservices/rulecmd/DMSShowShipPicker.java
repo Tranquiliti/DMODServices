@@ -1,15 +1,18 @@
-package com.fs.starfarer.api.impl.campaign.rulecmd;
+package org.tranquility.dmodservices.rulecmd;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FleetMemberPickerListener;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.rules.MemKeys;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
+import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
+import com.fs.starfarer.api.impl.campaign.rulecmd.FireBest;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
 import lunalib.lunaSettings.LunaSettings;
@@ -17,7 +20,7 @@ import lunalib.lunaSettings.LunaSettings;
 import java.util.*;
 
 @SuppressWarnings("unused")
-public class DModServicesShowShipPicker extends BaseCommandPlugin {
+public class DMSShowShipPicker extends BaseCommandPlugin {
     @Override
     public boolean execute(String ruleId, final InteractionDialogAPI dialog, final List<Misc.Token> params, final Map<String, MemoryAPI> memoryMap) {
         if (dialog == null) return false;
@@ -58,14 +61,11 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
                         localMemory.set("$DModServices_notEligible", "noAutoFlagship", 0f);
                     else if (!member.getCaptain().isDefault()) // Any officer
                         localMemory.set("$DModServices_notEligible", "officerInShip", 0f);
-                    else { // Ship has D-Mods not obtainable in automated ships
-                        for (HullModSpecAPI hullMod : DModManager.getModsWithTags(Tags.HULLMOD_NOT_AUTO)) {
-                            if (member.getVariant().hasHullMod(hullMod.getId())) {
+                    else for (HullModSpecAPI hullMod : DModManager.getModsWithTags(Tags.HULLMOD_NOT_AUTO))
+                            if (member.getVariant().hasHullMod(hullMod.getId())) { // Check if ship has any D-Mods not obtainable in automated ships
                                 localMemory.set("$DModServices_notEligible", "incompatibleDMod", 0f);
                                 break;
                             }
-                        }
-                    }
                 }
 
                 // No ineligibility found
@@ -90,11 +90,11 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
                                     multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
                             } else multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
 
-                            float dModMultiplier = Math.min(0.4f + DModManager.getNumDMods(member.getVariant()) * 0.15f, 1.0f);
-                            credits = dModMultiplier * member.getHullSpec().getBaseValue() * multiplier;
+                            float dModMultiplier = Math.min(DModManager.getNumDMods(member.getVariant()) * 0.15f + 0.4f, 1.0f);
+                            credits = dModMultiplier * getPristineHullSpec(member).getBaseValue() * multiplier;
                             break;
                         case 3: // Automating ship
-                            credits = member.getHullSpec().getBaseValue() * 3.0f;
+                            credits = getPristineHullSpec(member).getBaseValue() * 3.0f;
 
                             // Confirmation popup
                             dialog.getOptionPanel().addOptionConfirmation("dmodservicesAutomateConfirm", Global.getSettings().getString("dmodservices", "confirmAutomate"), Global.getSettings().getString("dmodservices", "confirmDModYes"), Global.getSettings().getString("dmodservices", "confirmDModNo"));
@@ -111,6 +111,13 @@ public class DModServicesShowShipPicker extends BaseCommandPlugin {
         });
 
         return true;
+    }
+
+    // Gets the base value of the fleet member's pristine hull variant
+    public static ShipHullSpecAPI getPristineHullSpec(FleetMemberAPI member) {
+        ShipHullSpecAPI hullSpec = member.getHullSpec().getDParentHull(); // Get the (D) variant's pristine hull equivalent
+        if (hullSpec == null) hullSpec = member.getHullSpec(); // Get base value for pristine hull
+        return hullSpec;
     }
 
     // Similar implementation to DModManager's addDMods(), but returns a sorted list of eligible D-Mods

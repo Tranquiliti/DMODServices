@@ -1,13 +1,15 @@
+package org.tranquility.dmodservices;
+
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
 import lunalib.lunaSettings.LunaSettings;
 
 @SuppressWarnings("unused")
-public class DModServicesModPlugin extends BaseModPlugin {
+public class DMSModPlugin extends BaseModPlugin {
     @Override
     public void onApplicationLoad() {
         if (Global.getSettings().getModManager().isModEnabled("lunalib"))
-            LunaSettings.addSettingsListener(new DModServicesLunaSettingsListener());
+            LunaSettings.addSettingsListener(new DMSLunaSettingsListener());
     }
 
     @Override
