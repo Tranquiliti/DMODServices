@@ -1,9 +1,11 @@
+package org.tranquility.dmodservices;
+
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
 
-public class DModServicesLunaSettingsListener implements LunaSettingsListener {
+public class DMSLunaSettingsListener implements LunaSettingsListener {
     @Override
     public void settingsChanged(String modId) {
         if (Global.getCurrentState() != GameState.CAMPAIGN) return;

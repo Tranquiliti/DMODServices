@@ -21,4 +21,9 @@
 	# Adds the option of fully-automating your ships while visiting a D-MOD service center,
 	# but only if you have discovered and defeated a certain defender fleet.
 	"dmodservicesEnableAutomateOption":false,
+
+
+
+	# Other
+	"ruleCommandPackages":["org.tranquility.dmodservices.rulecmd"]
 }

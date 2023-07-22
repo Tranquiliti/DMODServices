@@ -1,4 +1,4 @@
-package com.fs.starfarer.api.impl.campaign.rulecmd;
+package org.tranquility.dmodservices;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCustomDialogDelegate;
@@ -9,12 +9,12 @@ import com.fs.starfarer.api.ui.CustomPanelAPI;
 
 import java.util.Map;
 
-public class DModServicesCustomDialogDelegate extends BaseCustomDialogDelegate {
-    protected DModServicesCustomUIPanelPlugin plugin = new DModServicesCustomUIPanelPlugin();
+public class DMSSelectDModDelegate extends BaseCustomDialogDelegate {
+    protected DMSSelectDModPanel plugin = new DMSSelectDModPanel();
     protected InteractionDialogAPI dialog;
     protected Map<String, MemoryAPI> memoryMap;
 
-    public DModServicesCustomDialogDelegate(InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap) {
+    public DMSSelectDModDelegate(InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap) {
         this.dialog = dialog;
         this.memoryMap = memoryMap;
     }
