@@ -1,4 +1,5 @@
 Version 1.0.0
+
 * "Select D-Mod" option can now select for multiple D-Mods at once!
   - D-Mod selection still abides by vanilla D-Mod rules (e.g. can only add D-Mods up to usual max, Compromised Armor/Hull being mutually-exclusive)
   - Price will change based on existing and planned D-Mods, but total price for adding 5 D-Mods should remain the same as before.
