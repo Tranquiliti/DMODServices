@@ -70,9 +70,7 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
 
                 // No ineligibility found
                 if (!localMemory.contains("$DModServices_notEligible")) {
-                    String[] dModIds = new String[potentialDMods.size()];
-                    for (int i = 0; i < dModIds.length; i++) dModIds[i] = potentialDMods.get(i).getId();
-                    localMemory.set("$DModServices_eligibleDMods", dModIds, 0f);
+                    localMemory.set("$DModServices_eligibleDMods", potentialDMods, 0f);
 
                     float credits = 0;
                     switch (pickOption) {
@@ -99,7 +97,7 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
                             // Confirmation popup
                             dialog.getOptionPanel().addOptionConfirmation("dmodservicesAutomateConfirm", Global.getSettings().getString("dmodservices", "confirmAutomate"), Global.getSettings().getString("dmodservices", "confirmDModYes"), Global.getSettings().getString("dmodservices", "confirmDModNo"));
                     }
-                    localMemory.set("$DModServices_credits", Misc.getWithDGS(credits), 0f);
+                    localMemory.set("$DModServices_credits", Misc.getDGSCredits(credits), 0f);
                 }
 
                 FireBest.fire(null, dialog, memoryMap, "DModServicesPickedShip");

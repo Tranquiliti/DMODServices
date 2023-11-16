@@ -1,3 +1,10 @@
+Version 1.0.1
+
+* "Select D-Mod" option now correctly sorts the selected D-Mods based on their display name
+* Changed some text
+
+
+
 Version 1.0.0
 
 * "Select D-Mod" option can now select for multiple D-Mods at once!
