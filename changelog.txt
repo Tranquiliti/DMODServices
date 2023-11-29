@@ -2,6 +2,7 @@ Version 1.0.1
 
 * "Select D-Mod" option now correctly sorts the selected D-Mods based on their display name
 * Changed some text
+* Refactored some code
 
 
 
