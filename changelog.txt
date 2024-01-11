@@ -1,5 +1,7 @@
 Version 1.0.1
 
+* Fixed the LunaLib soft dependency
+    - This means this mod no longer requires either LunaLib or Java 8 to run
 * "Select D-Mod" option now correctly sorts the selected D-Mods based on their display name
 * Changed some text
 * Refactored some code
