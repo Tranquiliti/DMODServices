@@ -16,7 +16,6 @@ public class DMSShowDModPicker extends BaseCommandPlugin {
         if (dialog == null) return false;
 
         dialog.showCustomDialog(325f, 480f, new DMSSelectDModDelegate(dialog, memoryMap));
-
         return true;
     }
 }

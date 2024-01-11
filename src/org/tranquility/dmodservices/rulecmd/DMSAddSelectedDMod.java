@@ -12,7 +12,6 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
 import lunalib.lunaSettings.LunaSettings;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +22,7 @@ public class DMSAddSelectedDMod extends BaseCommandPlugin {
         if (dialog == null) return false;
 
         FleetMemberAPI member = (FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get("$DModServices_pickedShip");
-        ArrayList<HullModSpecAPI> pickedDMods = (ArrayList<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get("$DModServices_pickedDMod");
+        List<HullModSpecAPI> pickedDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get("$DModServices_pickedDMods");
         DModManager.setDHull(member.getVariant());
         for (HullModSpecAPI picked : pickedDMods) {
             member.getVariant().removeSuppressedMod(picked.getId());

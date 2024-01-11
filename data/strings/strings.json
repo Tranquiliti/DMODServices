@@ -3,7 +3,7 @@
 		"pickShipTitle":"Select ship",
 		"pickShipOkText":"Confirm",
 		"pickShipCancelText":"Cancel",
-		"confirmRandomDModHidden":"\"After you receive back your now-damaged ship, your double-check your received compensation, only to realize it's slightly higher than expected. Perhaps the D-MOD center wanted to thank you for providing this opportunity to them?\"",
+		"confirmRandomDModHidden":"\"After receiving back the now-damaged ship, you noticed that an additional sum of credits was sent alongside the expected compensation. Was this a thank-you tip from the D-MOD center? If so, perhaps the ship you offered had something to do with that?\"",
 		"confirmDModRandom":"Confirm? The selected ship will receive a random D-Mod as if it were disabled in-combat.",
 		"confirmDModPrecise":"Confirm? The selected ship will receive the following D-Mods: ",
 		"confirmAutomate":"Confirm? The selected ship will become fully-automated and receive a random D-Mod. In addition, the ship cannot be restored back to pristine condition.",
