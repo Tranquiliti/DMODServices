@@ -11,7 +11,6 @@ import java.util.Map;
 
 @SuppressWarnings("unused")
 public class DMSShowPlayerFleet extends BaseCommandPlugin {
-    // A Rule Command to do just one thing XD
     @Override
     public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
         if (dialog == null) return false;

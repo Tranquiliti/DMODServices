@@ -1,6 +1,5 @@
 package org.tranquility.dmodservices;
 
-import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCustomDialogDelegate;
 import com.fs.starfarer.api.campaign.CustomUIPanelPlugin;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
@@ -9,10 +8,13 @@ import com.fs.starfarer.api.ui.CustomPanelAPI;
 
 import java.util.Map;
 
+import static org.tranquility.dmodservices.DMSUtil.PICK_SHIP_CANCEL_TEXT;
+import static org.tranquility.dmodservices.DMSUtil.PICK_SHIP_OK_TEXT;
+
 public class DMSSelectDModDelegate extends BaseCustomDialogDelegate {
-    protected DMSSelectDModPanel plugin = new DMSSelectDModPanel();
-    protected InteractionDialogAPI dialog;
-    protected Map<String, MemoryAPI> memoryMap;
+    private final DMSSelectDModPanel plugin = new DMSSelectDModPanel();
+    private final InteractionDialogAPI dialog;
+    private final Map<String, MemoryAPI> memoryMap;
 
     public DMSSelectDModDelegate(InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap) {
         this.dialog = dialog;
@@ -31,12 +33,12 @@ public class DMSSelectDModDelegate extends BaseCustomDialogDelegate {
 
     @Override
     public String getConfirmText() {
-        return Global.getSettings().getString("dmodservices", "pickShipOkText");
+        return PICK_SHIP_OK_TEXT;
     }
 
     @Override
     public String getCancelText() {
-        return Global.getSettings().getString("dmodservices", "pickShipCancelText");
+        return PICK_SHIP_CANCEL_TEXT;
     }
 
     @Override

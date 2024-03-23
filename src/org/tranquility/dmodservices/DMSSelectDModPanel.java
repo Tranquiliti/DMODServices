@@ -22,23 +22,25 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.tranquility.dmodservices.DMSUtil.*;
+
 @SuppressWarnings("unchecked")
 public class DMSSelectDModPanel extends BaseCustomUIPanelPlugin {
-    protected transient InteractionDialogAPI dialog;
-    protected transient Map<String, MemoryAPI> memoryMap;
-    protected transient Map<String, ButtonAPI> buttons;
-    protected transient int buttonsChecked;
-    protected transient int numExistingDMods;
-    protected transient boolean allowDamageStruct;
+    private transient InteractionDialogAPI dialog;
+    private transient Map<String, MemoryAPI> memoryMap;
+    private transient Map<String, ButtonAPI> buttons;
+    private transient int buttonsChecked;
+    private transient int numExistingDMods;
+    private transient boolean allowDamageStruct;
 
     public void init(CustomPanelAPI panel, InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap) {
         this.dialog = dialog;
         this.memoryMap = memoryMap;
         buttonsChecked = 0;
-        numExistingDMods = DModManager.getNumDMods(((FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get("$DModServices_pickedShip")).getVariant());
+        numExistingDMods = DModManager.getNumDMods(((FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get(MEM_PICKED_SHIP)).getVariant());
         allowDamageStruct = true;
 
-        List<HullModSpecAPI> potentialDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get("$DModServices_eligibleDMods");
+        List<HullModSpecAPI> potentialDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get(MEM_ELIGIBLE_DMODS);
         buttons = new LinkedHashMap<>(potentialDMods.size());
         TooltipMakerAPI tooltip = panel.createUIElement(panel.getPosition().getWidth(), panel.getPosition().getHeight(), true);
         for (HullModSpecAPI thisHullMod : potentialDMods) {
@@ -47,7 +49,6 @@ public class DMSSelectDModPanel extends BaseCustomUIPanelPlugin {
             tooltip.addImage(thisHullMod.getSpriteName(), imageSize, imageSize, -25f); // Hacky way of "attaching" D-Mod sprite to area checkbox
             buttons.put(thisHullMod.getId(), button);
         }
-
         panel.addUIElement(tooltip);
     }
 
@@ -59,17 +60,17 @@ public class DMSSelectDModPanel extends BaseCustomUIPanelPlugin {
             if (buttons.get(dModId).isChecked()) checked.add((HullModSpecAPI) buttons.get(dModId).getCustomData());
 
         Float multiplier;
-        if (Global.getSettings().getModManager().isModEnabled("lunalib")) {
+        if (LUNALIB_ENABLED) {
             multiplier = LunaSettings.getFloat("dmodservices", "selectDModCostMult");
             if (multiplier == null) multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
         } else multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
 
         MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
-        float newCredits = Float.parseFloat(((String) localMemory.get("$DModServices_credits")).replaceAll("[^0-9]", ""));
+        float newCredits = Float.parseFloat(((String) localMemory.get(MEM_CREDITS)).replaceAll("[^0-9]", ""));
 
         // Increase the overall price with each additional D-Mod
         if (checked.size() > 1) {
-            float baseValue = DMSShowShipPicker.getPristineHullSpec((FleetMemberAPI) localMemory.get("$DModServices_pickedShip")).getBaseValue();
+            float baseValue = DMSShowShipPicker.getPristineHullSpec((FleetMemberAPI) localMemory.get(MEM_PICKED_SHIP)).getBaseValue();
             for (int i = 1; i < checked.size(); i++) {
                 float dModMultiplier = Math.min((numExistingDMods + i) * 0.15f + 0.4f, 1.0f);
                 newCredits += dModMultiplier * baseValue * multiplier;
@@ -81,14 +82,14 @@ public class DMSSelectDModPanel extends BaseCustomUIPanelPlugin {
             display.append(hullMod.getDisplayName()).append(", ");
         display.delete(display.length() - 2, display.length());
 
-        localMemory.set("$DModServices_pickedDMods", checked, 0f);
-        localMemory.set("$DModServices_pickedDModDisplay", display.toString(), 0f);
-        localMemory.set("$DModServices_newCredits", Misc.getDGSCredits(newCredits), 0f);
+        localMemory.set(MEM_PICKED_DMODS, checked, 0f);
+        localMemory.set(MEM_PICKED_DMOD_DISPLAY, display.toString(), 0f);
+        localMemory.set(MEM_NEW_CREDITS, Misc.getDGSCredits(newCredits), 0f);
 
         FireBest.fire(null, dialog, memoryMap, "DModServicesPickedDMod");
 
         // Confirmation popup to prevent accidental confirms
-        dialog.getOptionPanel().addOptionConfirmation("dmodservicesPreciseConfirm", Global.getSettings().getString("dmodservices", "confirmDModPrecise") + display, Global.getSettings().getString("dmodservices", "confirmDModYes"), Global.getSettings().getString("dmodservices", "confirmDModNo"));
+        dialog.getOptionPanel().addOptionConfirmation("dmodservicesPreciseConfirm", CONFIRM_DMOD_PRECISE + display, CONFIRM_DMOD_YES, CONFIRM_DMOD_NO);
     }
 
     // Triggers on every areaCheckbox press

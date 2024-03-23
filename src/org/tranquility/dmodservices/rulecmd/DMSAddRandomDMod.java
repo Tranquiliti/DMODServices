@@ -19,41 +19,46 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static org.tranquility.dmodservices.DMSUtil.*;
+
 @SuppressWarnings({"unused", "unchecked"})
 public class DMSAddRandomDMod extends BaseCommandPlugin {
     @Override
     public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
         if (dialog == null) return false;
 
-        FleetMemberAPI member = (FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get("$DModServices_pickedShip");
+        FleetMemberAPI member = (FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get(MEM_PICKED_SHIP);
         if (member.getStatus().getRandom() == null) member.getStatus().setRandom(new Random());
 
-        if (!params.get(0).getBoolean(memoryMap)) { // Not automated
+        boolean isAutomated = params.get(0).getBoolean(memoryMap);
+        if (!isAutomated) {
             member.getStatus().disable();
-            member.getStatus().setHullFraction(0.01f); // Need to do this since 0% hull can cause bugs when entering combat
+            member.getStatus().setHullFraction(0.01f); // Needed as entering combat with 0% hull can cause bugs
 
-            boolean addHidden = DModManager.getNumDMods(member.getVariant()) < 1 && (member.getShipName().startsWith(Global.getSector().getFaction(Factions.DIKTAT).getShipNamePrefix()) || member.getShipName().startsWith(Global.getSector().getFaction(Factions.LIONS_GUARD).getShipNamePrefix())) && (Global.getSector().getFaction(Factions.DIKTAT).knowsShip(member.getHullId()) || Global.getSector().getFaction(Factions.LIONS_GUARD).knowsShip(member.getHullId()));
-            String factionId = memoryMap.get(MemKeys.FACTION).getString("$id");
-            if (addHidden && factionId != null && !factionId.equals(Factions.DIKTAT)) {
+            if (isHiddenEligible(member, memoryMap.get(MemKeys.FACTION).getString("$id"))) {
                 new AddCredits().execute(null, dialog, Misc.tokenize(Float.toString(member.getHullSpec().getBaseValue() * 0.005f)), memoryMap);
-                new AddText().execute(null, dialog, Misc.tokenize(Global.getSettings().getString("dmodservices", "confirmRandomDModHidden")), memoryMap);
+                new AddText().execute(null, dialog, Misc.tokenize(CONFIRM_RANDOM_DMOD_HIDDEN), memoryMap);
             }
-        } else { // Add the appropriate automated hull-mod + tags
+        } else {
             member.getVariant().addPermaMod(HullMods.AUTOMATED);
             member.getVariant().addTag(Tags.TAG_AUTOMATED_NO_PENALTY);
             member.getVariant().addTag(Tags.VARIANT_UNRESTORABLE);
         }
         member.getRepairTracker().setCR(0f);
 
-        // Adds a random D-Mod to the ship
-        List<HullModSpecAPI> potentialDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get("$DModServices_eligibleDMods");
+        List<HullModSpecAPI> potentialDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get(MEM_ELIGIBLE_DMODS);
         HullModSpecAPI pickHullMod = potentialDMods.get(member.getStatus().getRandom().nextInt(potentialDMods.size()));
-        memoryMap.get(MemKeys.LOCAL).set("$DModServices_pickedDModDisplay", pickHullMod.getDisplayName(), 0f);
+        memoryMap.get(MemKeys.LOCAL).set(MEM_PICKED_DMOD_DISPLAY, pickHullMod.getDisplayName(), 0f);
         DModManager.setDHull(member.getVariant());
         member.getVariant().removeSuppressedMod(pickHullMod.getId());
         member.getVariant().addPermaMod(pickHullMod.getId(), false);
 
         Global.getSoundPlayer().playUISound("ui_raid_finished", 0.5f, 2f);
         return true;
+    }
+
+    private boolean isHiddenEligible(FleetMemberAPI member, String factionId) {
+        if (factionId != null && !factionId.equals(Factions.DIKTAT)) return false;
+        return DModManager.getNumDMods(member.getVariant()) < 1 && (member.getShipName().startsWith(Global.getSector().getFaction(Factions.DIKTAT).getShipNamePrefix()) || member.getShipName().startsWith(Global.getSector().getFaction(Factions.LIONS_GUARD).getShipNamePrefix())) && (Global.getSector().getFaction(Factions.DIKTAT).knowsShip(member.getHullId()) || Global.getSector().getFaction(Factions.LIONS_GUARD).knowsShip(member.getHullId()));
     }
 }
