@@ -1,4 +1,4 @@
-package org.tranquility.dmodservices;
+package org.tranquility.dmodservices.lunalib;
 
 import lunalib.lunaSettings.LunaSettings;
 

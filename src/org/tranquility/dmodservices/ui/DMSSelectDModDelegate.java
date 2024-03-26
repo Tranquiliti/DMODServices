@@ -1,4 +1,4 @@
-package org.tranquility.dmodservices;
+package org.tranquility.dmodservices.ui;
 
 import com.fs.starfarer.api.campaign.BaseCustomDialogDelegate;
 import com.fs.starfarer.api.campaign.CustomUIPanelPlugin;

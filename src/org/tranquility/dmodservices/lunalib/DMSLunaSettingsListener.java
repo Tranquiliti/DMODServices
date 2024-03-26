@@ -1,4 +1,4 @@
-package org.tranquility.dmodservices;
+package org.tranquility.dmodservices.lunalib;
 
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;

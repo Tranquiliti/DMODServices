@@ -33,7 +33,7 @@ public class DMSAddSelectedDMod extends BaseCommandPlugin {
 
         Boolean makeUnrestorable;
         if (LUNALIB_ENABLED) {
-            makeUnrestorable = LunaSettings.getBoolean("dmodservices", "makeUnrestorable");
+            makeUnrestorable = LunaSettings.getBoolean(MOD_ID, "makeUnrestorable");
             if (makeUnrestorable == null)
                 makeUnrestorable = Global.getSettings().getBoolean("dmodservicesMakeUnrestorable");
         } else makeUnrestorable = Global.getSettings().getBoolean("dmodservicesMakeUnrestorable");

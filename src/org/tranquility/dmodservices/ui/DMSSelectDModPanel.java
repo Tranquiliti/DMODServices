@@ -1,4 +1,4 @@
-package org.tranquility.dmodservices;
+package org.tranquility.dmodservices.ui;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCustomUIPanelPlugin;
@@ -15,7 +15,7 @@ import com.fs.starfarer.api.ui.CustomPanelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import lunalib.lunaSettings.LunaSettings;
-import org.tranquility.dmodservices.rulecmd.DMSShowShipPicker;
+import org.tranquility.dmodservices.DMSUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,12 +26,29 @@ import static org.tranquility.dmodservices.DMSUtil.*;
 
 @SuppressWarnings("unchecked")
 public class DMSSelectDModPanel extends BaseCustomUIPanelPlugin {
-    private transient InteractionDialogAPI dialog;
-    private transient Map<String, MemoryAPI> memoryMap;
-    private transient Map<String, ButtonAPI> buttons;
-    private transient int buttonsChecked;
-    private transient int numExistingDMods;
-    private transient boolean allowDamageStruct;
+    private InteractionDialogAPI dialog;
+    private Map<String, MemoryAPI> memoryMap;
+    private Map<String, ButtonAPI> buttons;
+    private int buttonsChecked;
+    private int numExistingDMods;
+    private boolean allowDamageStruct;
+
+    // Triggers on every areaCheckbox press
+    // buttonId is the data of the clicked button
+    @Override
+    public void buttonPressed(Object buttonId) {
+        HullModSpecAPI pressedHullMod = (HullModSpecAPI) buttonId;
+        boolean isPressed = buttons.get(pressedHullMod.getId()).isChecked();
+        buttonsChecked += isPressed ? 1 : -1;
+        if (!pressedHullMod.hasTag(Tags.HULLMOD_DESTROYED_ALWAYS) && pressedHullMod.hasTag(Tags.HULLMOD_DAMAGE_STRUCT))
+            allowDamageStruct = !isPressed;
+
+        for (String dModId : buttons.keySet()) {
+            ButtonAPI thisButton = buttons.get(dModId);
+            HullModSpecAPI thisHullMod = (HullModSpecAPI) thisButton.getCustomData();
+            thisButton.setEnabled(thisButton.isChecked() || (buttonsChecked + numExistingDMods < DModManager.MAX_DMODS_FROM_COMBAT && (allowDamageStruct || thisHullMod.hasTag(Tags.HULLMOD_DESTROYED_ALWAYS) || !thisHullMod.hasTag(Tags.HULLMOD_DAMAGE_STRUCT))));
+        }
+    }
 
     public void init(CustomPanelAPI panel, InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap) {
         this.dialog = dialog;
@@ -61,7 +78,7 @@ public class DMSSelectDModPanel extends BaseCustomUIPanelPlugin {
 
         Float multiplier;
         if (LUNALIB_ENABLED) {
-            multiplier = LunaSettings.getFloat("dmodservices", "selectDModCostMult");
+            multiplier = LunaSettings.getFloat(MOD_ID, "selectDModCostMult");
             if (multiplier == null) multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
         } else multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
 
@@ -70,11 +87,9 @@ public class DMSSelectDModPanel extends BaseCustomUIPanelPlugin {
 
         // Increase the overall price with each additional D-Mod
         if (checked.size() > 1) {
-            float baseValue = DMSShowShipPicker.getPristineHullSpec((FleetMemberAPI) localMemory.get(MEM_PICKED_SHIP)).getBaseValue();
-            for (int i = 1; i < checked.size(); i++) {
-                float dModMultiplier = Math.min((numExistingDMods + i) * 0.15f + 0.4f, 1.0f);
-                newCredits += dModMultiplier * baseValue * multiplier;
-            }
+            float baseValue = DMSUtil.getPristineHullSpec((FleetMemberAPI) localMemory.get(MEM_PICKED_SHIP)).getBaseValue();
+            for (int i = 1; i < checked.size(); i++)
+                newCredits += getSelectDModCostMult(numExistingDMods + i) * baseValue * multiplier;
         }
 
         StringBuilder display = new StringBuilder();
@@ -90,22 +105,5 @@ public class DMSSelectDModPanel extends BaseCustomUIPanelPlugin {
 
         // Confirmation popup to prevent accidental confirms
         dialog.getOptionPanel().addOptionConfirmation("dmodservicesPreciseConfirm", CONFIRM_DMOD_PRECISE + display, CONFIRM_DMOD_YES, CONFIRM_DMOD_NO);
-    }
-
-    // Triggers on every areaCheckbox press
-    // buttonId is the data of the clicked button
-    @Override
-    public void buttonPressed(Object buttonId) {
-        HullModSpecAPI pressedHullMod = (HullModSpecAPI) buttonId;
-        boolean isPressed = buttons.get(pressedHullMod.getId()).isChecked();
-        buttonsChecked += isPressed ? 1 : -1;
-        if (!pressedHullMod.hasTag(Tags.HULLMOD_DESTROYED_ALWAYS) && pressedHullMod.hasTag(Tags.HULLMOD_DAMAGE_STRUCT))
-            allowDamageStruct = !isPressed;
-
-        for (String dModId : buttons.keySet()) {
-            ButtonAPI thisButton = buttons.get(dModId);
-            HullModSpecAPI thisHullMod = (HullModSpecAPI) thisButton.getCustomData();
-            thisButton.setEnabled(thisButton.isChecked() || (buttonsChecked + numExistingDMods < DModManager.MAX_DMODS_FROM_COMBAT && (allowDamageStruct || thisHullMod.hasTag(Tags.HULLMOD_DESTROYED_ALWAYS) || !thisHullMod.hasTag(Tags.HULLMOD_DAMAGE_STRUCT))));
-        }
     }
 }

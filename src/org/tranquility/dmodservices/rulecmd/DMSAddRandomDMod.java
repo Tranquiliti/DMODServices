@@ -47,18 +47,18 @@ public class DMSAddRandomDMod extends BaseCommandPlugin {
         member.getRepairTracker().setCR(0f);
 
         List<HullModSpecAPI> potentialDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get(MEM_ELIGIBLE_DMODS);
-        HullModSpecAPI pickHullMod = potentialDMods.get(member.getStatus().getRandom().nextInt(potentialDMods.size()));
-        memoryMap.get(MemKeys.LOCAL).set(MEM_PICKED_DMOD_DISPLAY, pickHullMod.getDisplayName(), 0f);
+        HullModSpecAPI pickedDMod = potentialDMods.get(member.getStatus().getRandom().nextInt(potentialDMods.size()));
+        memoryMap.get(MemKeys.LOCAL).set(MEM_PICKED_DMOD_DISPLAY, pickedDMod.getDisplayName(), 0f);
         DModManager.setDHull(member.getVariant());
-        member.getVariant().removeSuppressedMod(pickHullMod.getId());
-        member.getVariant().addPermaMod(pickHullMod.getId(), false);
+        member.getVariant().removeSuppressedMod(pickedDMod.getId());
+        member.getVariant().addPermaMod(pickedDMod.getId(), false);
 
         Global.getSoundPlayer().playUISound("ui_raid_finished", 0.5f, 2f);
         return true;
     }
 
     private boolean isHiddenEligible(FleetMemberAPI member, String factionId) {
-        if (factionId != null && !factionId.equals(Factions.DIKTAT)) return false;
+        if (factionId == null || factionId.equals(Factions.DIKTAT)) return false;
         return DModManager.getNumDMods(member.getVariant()) < 1 && (member.getShipName().startsWith(Global.getSector().getFaction(Factions.DIKTAT).getShipNamePrefix()) || member.getShipName().startsWith(Global.getSector().getFaction(Factions.LIONS_GUARD).getShipNamePrefix())) && (Global.getSector().getFaction(Factions.DIKTAT).knowsShip(member.getHullId()) || Global.getSector().getFaction(Factions.LIONS_GUARD).knowsShip(member.getHullId()));
     }
 }

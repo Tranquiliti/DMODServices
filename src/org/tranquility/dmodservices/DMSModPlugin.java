@@ -2,6 +2,7 @@ package org.tranquility.dmodservices;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
+import org.tranquility.dmodservices.lunalib.DMSLunaUtil;
 
 import static org.tranquility.dmodservices.DMSUtil.*;
 
@@ -15,7 +16,7 @@ public class DMSModPlugin extends BaseModPlugin {
     @Override
     public void onGameLoad(boolean newGame) {
         Boolean enabled = null;
-        if (LUNALIB_ENABLED) enabled = DMSLunaUtil.getBoolean("dmodservices", "enableDMODServices");
+        if (LUNALIB_ENABLED) enabled = DMSLunaUtil.getBoolean(MOD_ID, "enableDMODServices");
         if (enabled == null) enabled = Global.getSettings().getBoolean("dmodservicesEnableDMODServices");
 
         // Add memory key only if disabling, since enable is default and likely to stay true for most players
@@ -24,7 +25,7 @@ public class DMSModPlugin extends BaseModPlugin {
         else Global.getSector().getMemoryWithoutUpdate().unset(MEM_DISABLED);
 
         Boolean enableAutomate = null;
-        if (LUNALIB_ENABLED) enableAutomate = DMSLunaUtil.getBoolean("dmodservices", "enableAutomateOption");
+        if (LUNALIB_ENABLED) enableAutomate = DMSLunaUtil.getBoolean(MOD_ID, "enableAutomateOption");
         if (enableAutomate == null)
             enableAutomate = Global.getSettings().getBoolean("dmodservicesEnableAutomateOption");
 
