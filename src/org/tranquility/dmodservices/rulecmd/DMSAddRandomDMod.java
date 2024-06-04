@@ -27,31 +27,42 @@ public class DMSAddRandomDMod extends BaseCommandPlugin {
     public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
         if (dialog == null) return false;
 
-        FleetMemberAPI member = (FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get(MEM_PICKED_SHIP);
+        MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
+        FleetMemberAPI member = (FleetMemberAPI) localMemory.get(MEM_PICKED_SHIP);
         if (member.getStatus().getRandom() == null) member.getStatus().setRandom(new Random());
 
+        List<HullModSpecAPI> potentialDMods = (List<HullModSpecAPI>) localMemory.get(MEM_ELIGIBLE_DMODS);
         boolean isAutomated = params.get(0).getBoolean(memoryMap);
         if (!isAutomated) {
             member.getStatus().disable();
             member.getStatus().setHullFraction(0.01f); // Needed as entering combat with 0% hull can cause bugs
+
+            StringBuilder display = new StringBuilder();
+            int selectorValue = (int) dialog.getOptionPanel().getSelectorValue(OPT_NUM_DMOD_SELECTOR);
+            localMemory.set(MEM_SET_NUM_OF_DMODS, selectorValue, 0f);
+            for (int i = selectorValue; i > 0; i--) {
+                HullModSpecAPI pickedDMod = potentialDMods.remove(member.getStatus().getRandom().nextInt(potentialDMods.size()));
+                addPermaMod(member.getVariant(), pickedDMod.getId());
+                display.append(pickedDMod.getDisplayName()).append(", ");
+            }
+            display.delete(display.length() - 2, display.length());
+            localMemory.set(MEM_PICKED_DMOD_DISPLAY, display.toString(), 0f);
 
             if (isHiddenEligible(member, memoryMap.get(MemKeys.FACTION).getString("$id"))) {
                 new AddCredits().execute(null, dialog, Misc.tokenize(Float.toString(member.getHullSpec().getBaseValue() * 0.005f)), memoryMap);
                 new AddText().execute(null, dialog, Misc.tokenize(CONFIRM_RANDOM_DMOD_HIDDEN), memoryMap);
             }
         } else {
+            HullModSpecAPI pickedDMod = potentialDMods.get(member.getStatus().getRandom().nextInt(potentialDMods.size()));
+            addPermaMod(member.getVariant(), pickedDMod.getId());
+            localMemory.set(MEM_PICKED_DMOD_DISPLAY, pickedDMod.getDisplayName(), 0f);
+
             member.getVariant().addPermaMod(HullMods.AUTOMATED);
             member.getVariant().addTag(Tags.TAG_AUTOMATED_NO_PENALTY);
             member.getVariant().addTag(Tags.VARIANT_UNRESTORABLE);
         }
         member.getRepairTracker().setCR(0f);
-
-        List<HullModSpecAPI> potentialDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get(MEM_ELIGIBLE_DMODS);
-        HullModSpecAPI pickedDMod = potentialDMods.get(member.getStatus().getRandom().nextInt(potentialDMods.size()));
-        memoryMap.get(MemKeys.LOCAL).set(MEM_PICKED_DMOD_DISPLAY, pickedDMod.getDisplayName(), 0f);
         DModManager.setDHull(member.getVariant());
-        member.getVariant().removeSuppressedMod(pickedDMod.getId());
-        member.getVariant().addPermaMod(pickedDMod.getId(), false);
 
         Global.getSoundPlayer().playUISound("ui_raid_finished", 0.5f, 2f);
         return true;

@@ -18,6 +18,8 @@ public final class DMSUtil {
     public static final String PICK_SHIP_TITLE = Global.getSettings().getString(STRINGS_CATEGORY, "pickShipTitle");
     public static final String PICK_SHIP_OK_TEXT = Global.getSettings().getString(STRINGS_CATEGORY, "pickShipOkText");
     public static final String PICK_SHIP_CANCEL_TEXT = Global.getSettings().getString(STRINGS_CATEGORY, "pickShipCancelText");
+    public static final String RANDOM_DMOD_SELECTOR_TEXT = Global.getSettings().getString(STRINGS_CATEGORY, "randomDModSelectorText");
+    public static final String RANDOM_DMOD_SELECTOR_TOOLTIP = Global.getSettings().getString(STRINGS_CATEGORY, "randomDModSelectorTooltip");
     public static final String CONFIRM_RANDOM_DMOD_HIDDEN = Global.getSettings().getString(STRINGS_CATEGORY, "confirmRandomDModHidden");
     public static final String CONFIRM_DMOD_RANDOM = Global.getSettings().getString(STRINGS_CATEGORY, "confirmDModRandom");
     public static final String CONFIRM_DMOD_PRECISE = Global.getSettings().getString(STRINGS_CATEGORY, "confirmDModPrecise");
@@ -31,6 +33,7 @@ public final class DMSUtil {
     // Memory keys
     public static final String MEM_PICKED_SHIP = "$DModServices_pickedShip";
     public static final String MEM_ELIGIBLE_DMODS = "$DModServices_eligibleDMods";
+    public static final String MEM_SET_NUM_OF_DMODS = "$DModServices_setNumOfDMods";
     public static final String MEM_PICKED_DMOD_DISPLAY = "$DModServices_pickedDModDisplay";
     public static final String MEM_PICKED_DMODS = "$DModServices_pickedDMods";
     public static final String MEM_OPTION_PICKED = "$DModServices_optionPicked";
@@ -39,6 +42,8 @@ public final class DMSUtil {
     public static final String MEM_DISABLED = "$DModServices_disabled";
     public static final String MEM_ENABLE_AUTOMATE = "$DModServices_enableAutomate";
     public static final String MEM_NEW_CREDITS = "$DModServices_newCredits";
+
+    public static final String OPT_NUM_DMOD_SELECTOR = "dmodservicesSelector";
 
     public static ShipHullSpecAPI getPristineHullSpec(FleetMemberAPI member) {
         ShipHullSpecAPI hullSpec = member.getHullSpec().getDParentHull();
@@ -82,5 +87,10 @@ public final class DMSUtil {
 
     public static float getSelectDModCostMult(int numOfDMods) {
         return Math.min(numOfDMods * 0.15f + 0.4f, 1.0f);
+    }
+
+    public static void addPermaMod(ShipVariantAPI variant, String hullModId) {
+        variant.removeSuppressedMod(hullModId);
+        variant.addPermaMod(hullModId, false);
     }
 }

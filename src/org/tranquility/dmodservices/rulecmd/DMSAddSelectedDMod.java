@@ -26,10 +26,8 @@ public class DMSAddSelectedDMod extends BaseCommandPlugin {
         FleetMemberAPI member = (FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get(MEM_PICKED_SHIP);
         List<HullModSpecAPI> pickedDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get(MEM_PICKED_DMODS);
         DModManager.setDHull(member.getVariant());
-        for (HullModSpecAPI picked : pickedDMods) {
-            member.getVariant().removeSuppressedMod(picked.getId());
-            member.getVariant().addPermaMod(picked.getId(), false);
-        }
+        for (HullModSpecAPI picked : pickedDMods)
+            addPermaMod(member.getVariant(), picked.getId());
 
         Boolean makeUnrestorable;
         if (LUNALIB_ENABLED) {

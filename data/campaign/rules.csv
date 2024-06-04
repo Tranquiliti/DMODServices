@@ -52,7 +52,8 @@ dmodservices_RandomDisablePickShipSel,DialogOptionSelected,$option == dmodservic
 dmodservices_RandomDisablePickedShip,DModServicesPickedShip,"$DModServices_pickedShip != null
 $DModServices_optionPicked == 1","SetTextHighlights $DModServices_credits
 SetEnabled dmodservicesRandomConfirm true
-SetTooltip dmodservicesRandomConfirm ""Disables the selected ship and applies a random D-Mod""",The D-MOD representative calculates that you may receive $DModServices_credits as compensation for offering this ship.,,"Enable ""Confirm"" option if a ship is picked"
+SetTooltip dmodservicesRandomConfirm ""Disables the selected ship and applies a random D-Mod""
+DMSAddDModSlider",The D-MOD representative calculates that you may receive $DModServices_credits as compensation for offering this ship.,,"Enable ""Confirm"" option if a ship is picked"
 dmodservices_RandomDisableShipNotEligible,DModServicesPickedShip,"$DModServices_pickedShip != null
 $DModServices_optionPicked == 1
 $DModServices_notEligible == ""maxDMods""","SetEnabled dmodservicesRandomConfirm false
