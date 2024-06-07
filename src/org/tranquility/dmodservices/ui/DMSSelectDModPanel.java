@@ -102,8 +102,5 @@ public class DMSSelectDModPanel extends BaseCustomUIPanelPlugin {
         localMemory.set(MEM_NEW_CREDITS, Misc.getDGSCredits(newCredits), 0f);
 
         FireBest.fire(null, dialog, memoryMap, "DModServicesPickedDMod");
-
-        // Confirmation popup to prevent accidental confirms
-        dialog.getOptionPanel().addOptionConfirmation("dmodservicesPreciseConfirm", CONFIRM_DMOD_PRECISE + display, CONFIRM_DMOD_YES, CONFIRM_DMOD_NO);
     }
 }

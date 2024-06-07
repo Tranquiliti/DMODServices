@@ -39,62 +39,12 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
                 if (members.isEmpty()) return;
 
                 FleetMemberAPI member = members.get(0);
-                dialog.getVisualPanel().showFleetMemberInfo(member, false);
-
                 MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
                 localMemory.set(MEM_PICKED_SHIP, member, 0f);
+                dialog.getVisualPanel().showFleetMemberInfo(member, false);
 
-                int pickOption = params.get(0).getInt(memoryMap);
-                localMemory.set(MEM_OPTION_PICKED, pickOption, 0f);
-
-                List<HullModSpecAPI> potentialDMods = getPotentialDMods(member.getVariant(), pickOption == 2, pickOption == 3);
-
-                localMemory.unset(MEM_NOT_ELIGIBLE);
-                if (DModManager.getNumDMods(member.getVariant()) >= DModManager.MAX_DMODS_FROM_COMBAT || potentialDMods.isEmpty())
-                    localMemory.set(MEM_NOT_ELIGIBLE, "maxDMods", 0f);
-                else if (pickOption == 3) { // When automating a ship
-                    if (member.getVariant().hasHullMod(HullMods.AUTOMATED))
-                        localMemory.set(MEM_NOT_ELIGIBLE, "alreadyAutomated", 0f);
-                    else if (member == Global.getSector().getPlayerFleet().getFlagship())
-                        localMemory.set(MEM_NOT_ELIGIBLE, "noAutoFlagship", 0f);
-                    else if (!member.getCaptain().isDefault()) localMemory.set(MEM_NOT_ELIGIBLE, "officerInShip", 0f);
-                    else for (HullModSpecAPI hullMod : DModManager.getModsWithTags(Tags.HULLMOD_NOT_AUTO))
-                            if (member.getVariant().hasHullMod(hullMod.getId())) {
-                                localMemory.set(MEM_NOT_ELIGIBLE, "incompatibleDMod", 0f);
-                                break;
-                            }
-                }
-
-                if (!localMemory.contains(MEM_NOT_ELIGIBLE)) {
-                    localMemory.set(MEM_ELIGIBLE_DMODS, potentialDMods, 0f);
-
-                    float credits = 0f;
-                    switch (pickOption) {
-                        case 1: // Random D-Mod
-                            credits = member.getStatus().getHullFraction() > 0.05f ? member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec(Commodities.SUPPLIES).getBasePrice() : 10f;
-
-                            // Confirmation popup to prevent accidental confirms
-                            dialog.getOptionPanel().addOptionConfirmation("dmodservicesRandomConfirm", CONFIRM_DMOD_RANDOM, CONFIRM_DMOD_YES, CONFIRM_DMOD_NO);
-                            break;
-                        case 2: // Selected D-Mod
-                            Float multiplier;
-                            if (LUNALIB_ENABLED) {
-                                multiplier = LunaSettings.getFloat(MOD_ID, "selectDModCostMult");
-                                if (multiplier == null)
-                                    multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
-                            } else multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
-
-                            credits = getSelectDModCostMult(DModManager.getNumDMods(member.getVariant())) * getPristineHullSpec(member).getBaseValue() * multiplier;
-                            break;
-                        case 3: // Automating ship
-                            credits = getPristineHullSpec(member).getBaseValue() * 3.0f;
-
-                            // Confirmation popup to prevent accidental confirms
-                            dialog.getOptionPanel().addOptionConfirmation("dmodservicesAutomateConfirm", CONFIRM_AUTOMATE, CONFIRM_DMOD_YES, CONFIRM_DMOD_NO);
-                            break;
-                    }
-                    localMemory.set(MEM_CREDITS, Misc.getDGSCredits(credits), 0f);
-                }
+                // TODO: yes, very descriptive, wow
+                doOtherStuff(member, dialog, params, memoryMap);
 
                 FireBest.fire(null, dialog, memoryMap, "DModServicesPickedShip");
             }
@@ -105,5 +55,54 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
         });
 
         return true;
+    }
+
+    private void doOtherStuff(FleetMemberAPI member, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
+        int pickOption = params.get(0).getInt(memoryMap);
+        MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
+        localMemory.set(MEM_OPTION_PICKED, pickOption, 0f);
+
+        List<HullModSpecAPI> potentialDMods = getPotentialDMods(member.getVariant(), pickOption == 2, pickOption == 3);
+
+        localMemory.unset(MEM_NOT_ELIGIBLE);
+        if (DModManager.getNumDMods(member.getVariant()) >= DModManager.MAX_DMODS_FROM_COMBAT || potentialDMods.isEmpty())
+            localMemory.set(MEM_NOT_ELIGIBLE, "maxDMods", 0f);
+        else if (pickOption == 3) { // When automating a ship
+            if (member.getVariant().hasHullMod(HullMods.AUTOMATED))
+                localMemory.set(MEM_NOT_ELIGIBLE, "alreadyAutomated", 0f);
+            else if (member == Global.getSector().getPlayerFleet().getFlagship())
+                localMemory.set(MEM_NOT_ELIGIBLE, "noAutoFlagship", 0f);
+            else if (!member.getCaptain().isDefault()) localMemory.set(MEM_NOT_ELIGIBLE, "officerInShip", 0f);
+            else for (HullModSpecAPI hullMod : DModManager.getModsWithTags(Tags.HULLMOD_NOT_AUTO))
+                    if (member.getVariant().hasHullMod(hullMod.getId())) {
+                        localMemory.set(MEM_NOT_ELIGIBLE, "incompatibleDMod", 0f);
+                        break;
+                    }
+        }
+
+        if (!localMemory.contains(MEM_NOT_ELIGIBLE)) {
+            localMemory.set(MEM_ELIGIBLE_DMODS, potentialDMods, 0f);
+
+            float credits = 0f;
+            switch (pickOption) {
+                case 1: // Random D-Mod
+                    credits = member.getStatus().getHullFraction() > 0.05f ? member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec(Commodities.SUPPLIES).getBasePrice() : 10f;
+                    break;
+                case 2: // Selected D-Mod
+                    Float multiplier;
+                    if (LUNALIB_ENABLED) {
+                        multiplier = LunaSettings.getFloat(MOD_ID, "selectDModCostMult");
+                        if (multiplier == null)
+                            multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
+                    } else multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
+
+                    credits = getSelectDModCostMult(DModManager.getNumDMods(member.getVariant())) * getPristineHullSpec(member).getBaseValue() * multiplier;
+                    break;
+                case 3: // Automating ship
+                    credits = getPristineHullSpec(member).getBaseValue() * 3.0f;
+                    break;
+            }
+            localMemory.set(MEM_CREDITS, Misc.getDGSCredits(credits), 0f);
+        }
     }
 }

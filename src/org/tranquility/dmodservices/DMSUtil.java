@@ -22,7 +22,7 @@ public final class DMSUtil {
     public static final String RANDOM_DMOD_SELECTOR_TOOLTIP = Global.getSettings().getString(STRINGS_CATEGORY, "randomDModSelectorTooltip");
     public static final String CONFIRM_RANDOM_DMOD_HIDDEN = Global.getSettings().getString(STRINGS_CATEGORY, "confirmRandomDModHidden");
     public static final String CONFIRM_DMOD_RANDOM = Global.getSettings().getString(STRINGS_CATEGORY, "confirmDModRandom");
-    public static final String CONFIRM_DMOD_PRECISE = Global.getSettings().getString(STRINGS_CATEGORY, "confirmDModPrecise");
+    public static final String CONFIRM_DMOD_SELECTION = Global.getSettings().getString(STRINGS_CATEGORY, "confirmDModSelection");
     public static final String CONFIRM_AUTOMATE = Global.getSettings().getString(STRINGS_CATEGORY, "confirmAutomate");
     public static final String CONFIRM_DMOD_YES = Global.getSettings().getString(STRINGS_CATEGORY, "confirmDModYes");
     public static final String CONFIRM_DMOD_NO = Global.getSettings().getString(STRINGS_CATEGORY, "confirmDModNo");

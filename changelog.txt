@@ -1,6 +1,7 @@
 Version 2.1.0
 
 * "Random D-Mod" option now has a slider to choose how many random D-Mods are added per confirm
+* Changed the dialogue flow when interacting with D-MOD; now a bit more receptive to "Press 1" spam
 * Major code refactors
 
 
