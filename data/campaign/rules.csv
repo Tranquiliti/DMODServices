@@ -101,7 +101,7 @@ SetShortcut dmodservicesSelectionGoBack ""ESCAPE""
 FireBest DModServicesPickedShipSelection",,"dmodservicesSelectionPickDMod:Select ""special modifications""
 dmodservicesSelectionGoBack:Go back",
 dmodservices_SelectionPickedShip,DModServicesPickedShipSelection,,"SetTextHighlights $DModServices_credits
-SetTooltip dmodservicesSelectionPickDMod ""Select a compatible D-Mod from a list""
+SetTooltip dmodservicesSelectionPickDMod ""Select compatible D-Mods to apply to the ship""
 DoCanAffordCheck $DModServices_credits dmodservicesSelectionPickDMod false",The D-MOD representative calculates your selected ship will require at least $DModServices_credits for a single modification.,,
 dmodservices_SelectionPickedShipIneligible,DModServicesPickedShipSelection,"$DModServices_notEligible == ""maxDMods""","SetEnabled dmodservicesSelectionPickDMod false
 SetTooltip dmodservicesSelectionPickDMod ""Ship cannot receive any more D-Mods from this service!""","The D-MOD representative tells you that your selected ship, unfortunately, cannot be damaged any further without risking a complete ship collapse.",,
@@ -115,7 +115,7 @@ SetShortcut dmodservicesSelectionGoBack2 ""ESCAPE""
 SetTextHighlights $DModServices_newCredits
 AddText ""Selected D-Mods: $DModServices_pickedDModDisplay""
 SetTextHighlights $DModServices_pickedDModDisplay
-SetTooltip dmodservicesSelectionConfirm ""Adds the selected D-Mods to the ship""
+SetTooltip dmodservicesSelectionConfirm ""Apply the selected D-Mods to the ship""
 DoCanAffordCheck $DModServices_newCredits dmodservicesSelectionConfirm false","The D-MOD representative confirms that, with the planned modifications, your selected ship will require $DModServices_newCredits to fully service it.","dmodservicesSelectionConfirm:Confirm
 dmodservicesSelectionGoBack2:Go back",
 dmodservices_SelectionConfirmSel,DialogOptionSelected,$option == dmodservicesSelectionConfirm,"DMSAddSelectedDMod

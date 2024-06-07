@@ -43,8 +43,7 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
                 localMemory.set(MEM_PICKED_SHIP, member, 0f);
                 dialog.getVisualPanel().showFleetMemberInfo(member, false);
 
-                // TODO: yes, very descriptive, wow
-                doOtherStuff(member, dialog, params, memoryMap);
+                validateShip(member, dialog, params, memoryMap);
 
                 FireBest.fire(null, dialog, memoryMap, "DModServicesPickedShip");
             }
@@ -57,13 +56,14 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
         return true;
     }
 
-    private void doOtherStuff(FleetMemberAPI member, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
+    private void validateShip(FleetMemberAPI member, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
         int pickOption = params.get(0).getInt(memoryMap);
         MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
-        localMemory.set(MEM_OPTION_PICKED, pickOption, 0f);
+        localMemory.set(MEM_OPTION_PICKED, pickOption, 0f); // Store the selected option for later use
 
         List<HullModSpecAPI> potentialDMods = getPotentialDMods(member.getVariant(), pickOption == 2, pickOption == 3);
 
+        // Check for eligibility
         localMemory.unset(MEM_NOT_ELIGIBLE);
         if (DModManager.getNumDMods(member.getVariant()) >= DModManager.MAX_DMODS_FROM_COMBAT || potentialDMods.isEmpty())
             localMemory.set(MEM_NOT_ELIGIBLE, "maxDMods", 0f);
@@ -83,6 +83,7 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
         if (!localMemory.contains(MEM_NOT_ELIGIBLE)) {
             localMemory.set(MEM_ELIGIBLE_DMODS, potentialDMods, 0f);
 
+            // Set credit price/gain based on picked option
             float credits = 0f;
             switch (pickOption) {
                 case 1: // Random D-Mod

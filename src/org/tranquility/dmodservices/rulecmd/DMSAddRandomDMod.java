@@ -42,6 +42,10 @@ public class DMSAddRandomDMod extends BaseCommandPlugin {
             localMemory.set(MEM_SET_NUM_OF_DMODS, selectorValue, 0f);
             for (int i = selectorValue; i > 0; i--) {
                 HullModSpecAPI pickedDMod = potentialDMods.remove(member.getStatus().getRandom().nextInt(potentialDMods.size()));
+
+                if (pickedDMod.hasTag(Tags.HULLMOD_DAMAGE_STRUCT))
+                    potentialDMods.removeAll(DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE_STRUCT));
+
                 addPermaMod(member.getVariant(), pickedDMod.getId());
                 display.append(pickedDMod.getDisplayName()).append(", ");
             }
