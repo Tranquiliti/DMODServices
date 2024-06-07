@@ -15,23 +15,23 @@ import lunalib.lunaSettings.LunaSettings;
 import java.util.List;
 import java.util.Map;
 
+import static org.tranquility.dmodservices.DMSUtil.*;
+
 @SuppressWarnings({"unused", "unchecked"})
 public class DMSAddSelectedDMod extends BaseCommandPlugin {
     @Override
     public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
         if (dialog == null) return false;
 
-        FleetMemberAPI member = (FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get("$DModServices_pickedShip");
-        List<HullModSpecAPI> pickedDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get("$DModServices_pickedDMods");
+        FleetMemberAPI member = (FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get(MEM_PICKED_SHIP);
+        List<HullModSpecAPI> pickedDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get(MEM_PICKED_DMODS);
         DModManager.setDHull(member.getVariant());
-        for (HullModSpecAPI picked : pickedDMods) {
-            member.getVariant().removeSuppressedMod(picked.getId());
-            member.getVariant().addPermaMod(picked.getId(), false);
-        }
+        for (HullModSpecAPI picked : pickedDMods)
+            addPermaMod(member.getVariant(), picked.getId());
 
         Boolean makeUnrestorable;
-        if (Global.getSettings().getModManager().isModEnabled("lunalib")) {
-            makeUnrestorable = LunaSettings.getBoolean("dmodservices", "makeUnrestorable");
+        if (LUNALIB_ENABLED) {
+            makeUnrestorable = LunaSettings.getBoolean(MOD_ID, "makeUnrestorable");
             if (makeUnrestorable == null)
                 makeUnrestorable = Global.getSettings().getBoolean("dmodservicesMakeUnrestorable");
         } else makeUnrestorable = Global.getSettings().getBoolean("dmodservicesMakeUnrestorable");

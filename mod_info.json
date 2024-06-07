@@ -3,9 +3,9 @@
   "name":"D-MOD Services",
   "utility":"true",
   "author":"Tranquility",
-  "version":{"major":2,"minor":0,"patch":0},
+  "version":{"major":2,"minor":1,"patch":0},
   "description":"Adds D-MOD services, which lets your ships gain Damage Mods in a controlled environment.",
-  "gameVersion":"0.97a-RC6",
+  "gameVersion":"0.97a-RC11",
   "jars":["jars/DMODServices.jar"],
   "modPlugin":"org.tranquility.dmodservices.DMSModPlugin"
 }

@@ -1,3 +1,11 @@
+Version 2.1.0
+
+* "Random D-Mod" option now has a slider to choose how many random D-Mods are added per confirm
+* Changed the dialogue flow when interacting with D-MOD; now a bit more receptive to "Press 1" spam
+* Major code and rules.csv refactors
+
+
+
 Version 2.0.0 (Update for Starsector 0.97)
 
 * Updated to Starsector 0.97
@@ -23,60 +31,3 @@ Version 1.0.0
 * "Select D-Mod" and "Automate" prices now instead consider the base value of the selected ship's pristine equivalent
   - This should fix most instances where overall prices were less than intended due to (D) hulls having a lower base value.
 * Changed source code packages and classes to be more readable
-
-
-
-Version 0.5.1
-
-* Ships now properly turn into their (D) variants when using D-MOD services.
-* Made some confirmation dialogs more clear about what will result from the selected option
-
-
-
-Version 0.5.0
-
-* Adjusted the "Select D-Mod" picker:
-  - Now properly selects only one D-Mod at a time.
-  - Made it slimmer and taller, which, in most cases, lets it display all D-Mods without a scroller
-* Made ship selection picker go wider if player fleet currently has more than 30 ships.
-
-
-
-Version 0.4.0
-
-* Added the "makeUnrestorable" option to settings.json and LunaSettings
-  - Disabled by default
-  - When enabled, the "Select a D-Mod" option also applies the 'Unrestorable' tag to the selected ship, preventing dockyard restoration and stopping the Hull Restoration skill from removing its D-Mods.
-* Added the option to fully-automate a ship when visiting a D-MOD service center
-  - Disabled by default
-  - Even when enabled, you must first discover and defeat a certain defender fleet before unlocking the option.
-
-
-
-Version 0.3.0
-
-* Changed select D-Mod picker to use an actual selection screen.
-  - Still only one D-Mod that can be picked at a time; if multiple are selected, only the top-most D-Mod will be chosen.
-  - Obviously not ideal, but, IMO, an improvement from needing to cycle through the same button many times.
-* Updated LunaLib compatibility
-  - If you use LunaLib alongside this mod, you'll need to update LunaLib to at least v1.7.4 to ensure compatibility.
-
-
-
-Version 0.2.0
-
-* Updated to Starsector 0.96a-RC6
-* Changed price scaling for adding a selected D-Mod; should be cheaper overall.
-
-
-
-Version 0.1.1
-
-* Ship selection screen now shows at most 7 ships per row (from 5), to match the "Your fleet" screen.
-* Other, very minor changes
-
-
-
-Version 0.1.0
-
-* Initial release
