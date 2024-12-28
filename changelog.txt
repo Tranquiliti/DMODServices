@@ -1,3 +1,15 @@
+Version 2.1.1
+
+* Slight UI changes for the ship picker
+* "Automate" option can no longer be applied to ships with equipped modular, non-automated fighter LPCs
+  - This limitation should prevent converted automated ships from maintaining their crewed fighter LPCs
+* Fixed "Select D-Mod" confirmation popup not showing the list of D-Mods
+* Some text changes:
+  - Text now displays the name of the selected ship
+  - Text should now have properly-highlighted words
+
+
+
 Version 2.1.0
 
 * "Random D-Mod" option now has a slider to choose how many random D-Mods are added per confirm

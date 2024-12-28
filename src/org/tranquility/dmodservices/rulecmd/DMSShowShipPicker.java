@@ -14,7 +14,6 @@ import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
 import com.fs.starfarer.api.impl.campaign.rulecmd.FireBest;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
-import lunalib.lunaSettings.LunaSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +27,9 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
     public boolean execute(String ruleId, final InteractionDialogAPI dialog, final List<Misc.Token> params, final Map<String, MemoryAPI> memoryMap) {
         if (dialog == null) return false;
 
-        ArrayList<FleetMemberAPI> members = new ArrayList<>(Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy());
+        List<FleetMemberAPI> members = new ArrayList<>(Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy());
         int cols = Math.max(Math.min(members.size(), 7), 4);
-        if (members.size() > 30) cols = 14; // More than 30 ships, so just go wide instead
+        if (members.size() > 30) cols = 12; // More than 30 ships, so just go wide instead
         int rows = (members.size() - 1) / cols + 1;
 
         dialog.showFleetMemberPickerDialog(PICK_SHIP_TITLE, PICK_SHIP_OK_TEXT, PICK_SHIP_CANCEL_TEXT, rows, cols, 96, true, false, members, new FleetMemberPickerListener() {
@@ -39,8 +38,8 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
                 if (members.isEmpty()) return;
 
                 FleetMemberAPI member = members.get(0);
-                MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
-                localMemory.set(MEM_PICKED_SHIP, member, 0f);
+                memoryMap.get(MemKeys.LOCAL).set(MEM_PICKED_SHIP, member, 0f);
+                memoryMap.get(MemKeys.LOCAL).set(MEM_PICKED_SHIP_NAME, member.getShipName());
                 dialog.getVisualPanel().showFleetMemberInfo(member, false);
 
                 validateShip(member, dialog, params, memoryMap);
@@ -68,16 +67,8 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
         if (DModManager.getNumDMods(member.getVariant()) >= DModManager.MAX_DMODS_FROM_COMBAT || potentialDMods.isEmpty())
             localMemory.set(MEM_NOT_ELIGIBLE, "maxDMods", 0f);
         else if (pickOption == 3) { // When automating a ship
-            if (member.getVariant().hasHullMod(HullMods.AUTOMATED))
-                localMemory.set(MEM_NOT_ELIGIBLE, "alreadyAutomated", 0f);
-            else if (member == Global.getSector().getPlayerFleet().getFlagship())
-                localMemory.set(MEM_NOT_ELIGIBLE, "noAutoFlagship", 0f);
-            else if (!member.getCaptain().isDefault()) localMemory.set(MEM_NOT_ELIGIBLE, "officerInShip", 0f);
-            else for (HullModSpecAPI hullMod : DModManager.getModsWithTags(Tags.HULLMOD_NOT_AUTO))
-                    if (member.getVariant().hasHullMod(hullMod.getId())) {
-                        localMemory.set(MEM_NOT_ELIGIBLE, "incompatibleDMod", 0f);
-                        break;
-                    }
+            String autoReason = canBeAutomated(member);
+            if (!autoReason.isEmpty()) localMemory.set(MEM_NOT_ELIGIBLE, autoReason, 0f);
         }
 
         if (!localMemory.contains(MEM_NOT_ELIGIBLE)) {
@@ -90,14 +81,7 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
                     credits = member.getStatus().getHullFraction() > 0.05f ? member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec(Commodities.SUPPLIES).getBasePrice() : 10f;
                     break;
                 case 2: // Selected D-Mod
-                    Float multiplier;
-                    if (LUNALIB_ENABLED) {
-                        multiplier = LunaSettings.getFloat(MOD_ID, "selectDModCostMult");
-                        if (multiplier == null)
-                            multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
-                    } else multiplier = Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
-
-                    credits = getSelectDModCostMult(DModManager.getNumDMods(member.getVariant())) * getPristineHullSpec(member).getBaseValue() * multiplier;
+                    credits = getSelectDModCostBaseMult(DModManager.getNumDMods(member.getVariant())) * getPristineHullSpec(member).getBaseValue() * getSelectDModCostSettingMult();
                     break;
                 case 3: // Automating ship
                     credits = getPristineHullSpec(member).getBaseValue() * 3.0f;
@@ -105,5 +89,18 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
             }
             localMemory.set(MEM_CREDITS, Misc.getDGSCredits(credits), 0f);
         }
+    }
+
+    private String canBeAutomated(FleetMemberAPI member) {
+        if (member.getVariant().hasHullMod(HullMods.AUTOMATED)) return "alreadyAutomated";
+        if (member == Global.getSector().getPlayerFleet().getFlagship()) return "noAutoFlagship";
+        if (!member.getCaptain().isDefault()) return "officerInShip";
+        for (String wingId : member.getVariant().getNonBuiltInWings())
+            if (!Global.getSettings().getFighterWingSpec(wingId).hasTag(Tags.AUTOMATED_FIGHTER))
+                return "fightersInShip";
+        for (HullModSpecAPI hullMod : DModManager.getModsWithTags(Tags.HULLMOD_NOT_AUTO))
+            if (member.getVariant().hasHullMod(hullMod.getId())) return "incompatibleDMod";
+
+        return "";
     }
 }

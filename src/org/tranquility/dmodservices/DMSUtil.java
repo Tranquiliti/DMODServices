@@ -7,6 +7,7 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
+import lunalib.lunaSettings.LunaSettings;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,6 +33,7 @@ public final class DMSUtil {
 
     // Memory keys
     public static final String MEM_PICKED_SHIP = "$DModServices_pickedShip";
+    public static final String MEM_PICKED_SHIP_NAME = "$DModServices_pickedShipName";
     public static final String MEM_ELIGIBLE_DMODS = "$DModServices_eligibleDMods";
     public static final String MEM_SET_NUM_OF_DMODS = "$DModServices_setNumOfDMods";
     public static final String MEM_PICKED_DMOD_DISPLAY = "$DModServices_pickedDModDisplay";
@@ -85,8 +87,16 @@ public final class DMSUtil {
         return potentialMods;
     }
 
-    public static float getSelectDModCostMult(int numOfDMods) {
+    public static float getSelectDModCostBaseMult(int numOfDMods) {
         return Math.min(numOfDMods * 0.15f + 0.4f, 1.0f);
+    }
+
+    public static Float getSelectDModCostSettingMult() {
+        if (LUNALIB_ENABLED) {
+            Float multi = LunaSettings.getFloat(MOD_ID, "selectDModCostMult");
+            if (multi != null) return multi;
+        }
+        return Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
     }
 
     public static void addPermaMod(ShipVariantAPI variant, String hullModId) {
