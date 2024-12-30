@@ -21,9 +21,10 @@ import java.util.Random;
 
 import static org.tranquility.dmodservices.DMSUtil.*;
 
-@SuppressWarnings({"unused", "unchecked"})
+@SuppressWarnings("unused")
 public class DMSAddRandomDMod extends BaseCommandPlugin {
     @Override
+    @SuppressWarnings("unchecked")
     public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
         if (dialog == null) return false;
 
@@ -31,7 +32,7 @@ public class DMSAddRandomDMod extends BaseCommandPlugin {
         FleetMemberAPI member = (FleetMemberAPI) localMemory.get(MEM_PICKED_SHIP);
         if (member.getStatus().getRandom() == null) member.getStatus().setRandom(new Random());
 
-        List<HullModSpecAPI> potentialDMods = (List<HullModSpecAPI>) localMemory.get(MEM_ELIGIBLE_DMODS);
+        List<HullModSpecAPI> potentialDMods = (List<HullModSpecAPI>) localMemory.get(MEM_ELIGIBLE_HULLMODS);
         boolean isAutomated = params.get(0).getBoolean(memoryMap);
         if (!isAutomated) {
             member.getStatus().disable();
@@ -40,6 +41,7 @@ public class DMSAddRandomDMod extends BaseCommandPlugin {
             StringBuilder display = new StringBuilder();
             int selectorValue = (int) dialog.getOptionPanel().getSelectorValue(OPT_NUM_DMOD_SELECTOR);
             localMemory.set(MEM_SET_NUM_OF_DMODS, selectorValue, 0f);
+            String separator = ", ";
             for (int i = selectorValue; i > 0; i--) {
                 HullModSpecAPI pickedDMod = potentialDMods.remove(member.getStatus().getRandom().nextInt(potentialDMods.size()));
 
@@ -47,10 +49,10 @@ public class DMSAddRandomDMod extends BaseCommandPlugin {
                     potentialDMods.removeAll(DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE_STRUCT));
 
                 addPermaMod(member.getVariant(), pickedDMod.getId());
-                display.append(pickedDMod.getDisplayName()).append(", ");
+                display.append(pickedDMod.getDisplayName()).append(separator);
             }
-            display.delete(display.length() - 2, display.length());
-            localMemory.set(MEM_PICKED_DMOD_DISPLAY, display.toString(), 0f);
+            display.delete(display.length() - separator.length(), display.length());
+            localMemory.set(MEM_PICKED_HULLMODS_DISPLAY, display.toString(), 0f);
 
             if (isHiddenEligible(member, memoryMap.get(MemKeys.FACTION).getString("$id"))) {
                 new AddCredits().execute(null, dialog, Misc.tokenize(Float.toString(member.getHullSpec().getBaseValue() * 0.005f)), memoryMap);
@@ -59,7 +61,7 @@ public class DMSAddRandomDMod extends BaseCommandPlugin {
         } else {
             HullModSpecAPI pickedDMod = potentialDMods.get(member.getStatus().getRandom().nextInt(potentialDMods.size()));
             addPermaMod(member.getVariant(), pickedDMod.getId());
-            localMemory.set(MEM_PICKED_DMOD_DISPLAY, pickedDMod.getDisplayName(), 0f);
+            localMemory.set(MEM_PICKED_HULLMODS_DISPLAY, pickedDMod.getDisplayName(), 0f);
 
             member.getVariant().addPermaMod(HullMods.AUTOMATED);
             member.getVariant().addTag(Tags.TAG_AUTOMATED_NO_PENALTY);

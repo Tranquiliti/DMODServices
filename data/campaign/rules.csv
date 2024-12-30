@@ -22,20 +22,13 @@ dmodservices_RandomOption,PopulateDModServicesOptions,,,,dmodservicesRandom:Offe
 dmodservices_SelectionOption,PopulateDModServicesOptions,,,,"dmodservicesSelection:Request ""special modifications"" for a ship",
 dmodservices_AutomateOption,PopulateDModServicesOptions,"$global.DModServices_enableAutomate
 $global.pkCacheDefendersDefeated",,,dmodservicesAutomate:Apply automated systems to a ship,Option only appears if a certain [REDACTED] fleet has been defeated
+dmodservices_SModsOption,PopulateDModServicesOptions,$global.sdtu_missionCompleted,,,dmodservicesSMods:Ask for special modifications removal on a ship,Option only appears if the Usurpers questline has been completed
 dmodservices_Leave,PopulateDModServicesOptions,,"SetShortcut dmodservicesLeave ""ESCAPE""",,dmodservicesLeave:Leave the service center,
 dmodservices_LeaveSel,DialogOptionSelected,$option == dmodservicesLeave,"ShowDefaultVisual
 FireAll PopulateOptions",,,Going back to market main menu
 ,,,,,,
 # Go Back option (shared by all D-MOD options),,,,,,
-dmodservices_GoBack,DialogOptionSelected,$option == dmodservicesGoBack,"unset $DModServices_pickedShip
-unset $DModServices_credits
-unset $DModServices_newCredits
-unset $DModServices_eligibleDMods
-unset $DModServices_notEligible
-unset $DModServices_optionPicked
-unset $DModServices_pickedDMods
-unset $DModServices_pickedDModDisplay
-FireAll PopulateDModServicesOptions",,,Going back to D-MOD service menu
+dmodservices_GoBack,DialogOptionSelected,$option == dmodservicesGoBack,FireAll PopulateDModServicesOptions,,,Going back to D-MOD service menu
 ,,,,,,
 # D-MOD option 1: Random D-Mod,,,,,,
 dmodservices_RandomFirst,DialogOptionSelected,$option == dmodservicesRandom,"$DModServices_askedAboutRandom = true 0
@@ -52,33 +45,41 @@ dmodservices_RandomPickShipSel,DialogOptionSelected,$option == dmodservicesRando
 dmodservices_RandomPickedShipStart,DModServicesPickedShip,$DModServices_optionPicked == 1,"SetShortcut dmodservicesRandomGoBack ""ESCAPE""
 FireBest DModServicesPickedShipRandom",,"dmodservicesRandomConfirm:Confirm
 dmodservicesRandomGoBack:Go back",
-dmodservices_RandomPickedShip,DModServicesPickedShipRandom,,"DMSAddOptionConfirmation dmodservicesRandomConfirm
-SetTextHighlights $DModServices_credits
+dmodservices_RandomPickedShip,DModServicesPickedShipRandom,,"SetTextHighlights $DModServices_credits $DModServices_pickedShipName
+DMSAddOptionConfirmation dmodservicesRandomConfirm ""Confirm? The $DModServices_pickedShipName will be severely damaged and receive a number of random D-Mods.""
 SetEnabled dmodservicesRandomConfirm true
-SetTooltip dmodservicesRandomConfirm ""Disables the selected ship and applies a random D-Mod""
-DMSAddDModSlider",The D-MOD representative calculates that you may receive at least $DModServices_credits as compensation for offering this ship.,,
-dmodservices_RandomPickedShipIneligible,DModServicesPickedShipRandom,"$DModServices_notEligible == ""maxDMods""","SetEnabled dmodservicesRandomConfirm false
-SetTooltip dmodservicesRandomConfirm ""Ship cannot receive any more D-Mods from this service!""","The D-MOD representative tells you that your selected ship, unfortunately, cannot be used as target practice, as it is far too damaged to remain recoverable after a demonstration.",,
-dmodservices_RandomConfirmSel,DialogOptionSelected,$option == dmodservicesRandomConfirm,"DMSAddRandomDMod false
+SetTooltip dmodservicesRandomConfirm ""Disables the ship and applies a random D-Mod""
+DMSAddDModSlider ""Number of D-Mods"" ""Set the intensity of the demonstration and, thus, the number of D-Mods acquired afterwards.""",The D-MOD representative calculates that you may receive at least $DModServices_credits as compensation for offering the $DModServices_pickedShipName.,,
+dmodservices_RandomPickedShipIneligible,DModServicesPickedShipRandom,"$DModServices_notEligible == ""maxDMods""","SetTextHighlights $DModServices_pickedShipName
+SetEnabled dmodservicesRandomConfirm false
+SetTooltip dmodservicesRandomConfirm ""Ship cannot receive any more D-Mods from this service!""","The D-MOD representative tells you that the $DModServices_pickedShipName, unfortunately, cannot be used as target practice, as it is far too damaged to remain recoverable after a demonstration.",,
+dmodservices_RandomConfirmSel,DialogOptionSelected,$option == dmodservicesRandomConfirm,"SetTextHighlights $DModServices_pickedShipName
+DMSAddRandomDMod false
 AddCredits $DModServices_credits
-AddTextSmall ""Selected ship now has $DModServices_pickedDModDisplay"" bad
-SetTextHighlights $DModServices_pickedDModDisplay
+AddTextSmall ""$DModServices_pickedShipName has received: $DModServices_pickedHullmodsDisplay"" bad
+SetTextHighlights $DModServices_pickedShipName $DModServices_pickedHullmodsDisplay
 DMSShowPlayerFleet
-FireAll DModServicesRandom","You have offered a ship to the D-MOD representative. An hour later, they invite you and your crew to their demonstration area, where you then find the ship sitting inert.
+FireAll DModServicesRandom","You have offered a ship to the D-MOD representative. An hour later, they invite you and your crew to their demonstration area, where you then find the $DModServices_pickedShipName sitting inert.
 
-Soon after, a battery of Hellbore Cannons pound the helpless ship, forming a cloud of metal and fire around it. The barrage of explosions rock the demonstration area, shaking the ground beneath you and causing some of your crew to instinctually duck for cover. Once the Hellbore battery ceases and the smoke finally clears, you see the ship still barely-intact, wondering how it even managed to survive all of that. As soon as you finish that thought, however, the ship's hull suddenly collapses onto itself, inciting cheers from the crowd of spectators as the D-MOD employee overseeing the demonstration formally ends the event.
+Soon after, a battery of Hellbore Cannons pound the helpless ship, forming a cloud of metal and fire around it. The barrage of explosions rock the demonstration area, shaking the ground beneath you and causing some of your crew to instinctually duck for cover. Once the Hellbore battery ceases and the smoke finally clears, you see the ship still barely-intact, wondering how it even managed to survive all of that.
 
-Surprisingly, all the weapons fire have not completely ruined the ship, despite the heavy damage. Eventually, D-MOD engineers recover the ship to a usable state and send it back to you.
-OR
-You have offered a ship to the D-MOD representative. An hour later, they invite you and your crew to their demonstration area, where you then find the ship sitting inert.
-
-Soon after, a Reaper-class torpedo slams into the lifeless hull, creating a nuclear explosion so powerful the containment fields protecting you and the other spectators start to visibly vibrate, making some of the spectators scream in fear. Fortunately, the explosion eventually subsides, allowing an unobstructed view of the obliterated target: a heap of burning metal, providing a beautiful, warm light inside the demonstration area. The event ends with the D-MOD employee overseeing the demonstration making an impassioned speech about the destructive beauty of the Reaper.
+As soon as you finish that thought, however, the ship's hull suddenly collapses onto itself, inciting cheers from the crowd of spectators as the presiding D-MOD employee formally ends the event.
 
 Surprisingly, all the weapons fire have not completely ruined the ship, despite the heavy damage. Eventually, D-MOD engineers recover the ship to a usable state and send it back to you.
 OR
-You have offered a ship to the D-MOD representative. An hour later, they invite you and your crew to their demonstration area, where you then find the ship sitting inert.
+You have offered a ship to the D-MOD representative. An hour later, they invite you and your crew to their demonstration area, where you then find the $DModServices_pickedShipName sitting inert.
 
-Soon after, a flash of light suddenly strikes the dormant ship, then another flash joins in the fray. Before long, the impressive array of ship-grade beams, ranging from modest Tactical Lasers to awe-inspiring Tachyon Lances, create a spectacular lightshow, to the delight of your crew and the other spectators - although the ship itself certainly isn't enjoying this at all. After the lightshow display finishes, what was once a functional ship is now a steaming scrap heap, comprised of little more than the scarred and sliced-off pieces of its former glory.
+Soon after, a Reaper-class torpedo slams into the lifeless hull, creating a nuclear explosion so powerful the protective containment fields visibly vibrate violenty, causing some spectators to scream in fear. Fortunately, the explosion eventually subsides, allowing an unobstructed view of the obliterated target: a heap of burning metal, providing a beautiful, warm light inside the demonstration area.
+
+This spectacular event ends with the presiding D-MOD employee making an impassioned speech about the destructive beauty of the Reaper.
+
+Surprisingly, all the weapons fire have not completely ruined the ship, despite the heavy damage. Eventually, D-MOD engineers recover the ship to a usable state and send it back to you.
+OR
+You have offered a ship to the D-MOD representative. An hour later, they invite you and your crew to their demonstration area, where you then find the $DModServices_pickedShipName sitting inert.
+
+Soon after, a flash of light suddenly strikes the dormant ship, then another flash joins in the fray. Before long, the impressive array of ship-grade beams, ranging from modest Tactical Lasers to awe-inspiring Tachyon Lances, create a spectacular lightshow, to the delight of your crew and the other spectators - although the ship itself certainly isn't enjoying this at all.
+
+At the end of this lightshow display, what was once a functional ship is now a steaming scrap heap, comprised of little more than the scarred and sliced-off pieces of its former glory.
 
 Surprisingly, all the weapons fire have not completely ruined the ship, despite the heavy damage. Eventually, D-MOD engineers recover the ship to a usable state and send it back to you.",,Add random D-Mod to selected ship
 dmodservices_RandomGoBackSel,DialogOptionSelected,$option == dmodservicesRandomGoBack,"DMSShowPlayerFleet
@@ -100,30 +101,32 @@ dmodservices_SelectionPickedShipStart,DModServicesPickedShip,$DModServices_optio
 SetShortcut dmodservicesSelectionGoBack ""ESCAPE""
 FireBest DModServicesPickedShipSelection",,"dmodservicesSelectionPickDMod:Select ""special modifications""
 dmodservicesSelectionGoBack:Go back",
-dmodservices_SelectionPickedShip,DModServicesPickedShipSelection,,"SetTextHighlights $DModServices_credits
+dmodservices_SelectionPickedShip,DModServicesPickedShipSelection,,"SetTextHighlights $DModServices_pickedShipName $DModServices_credits
 SetTooltip dmodservicesSelectionPickDMod ""Select compatible D-Mods to apply to the ship""
-DoCanAffordCheck $DModServices_credits dmodservicesSelectionPickDMod false",The D-MOD representative calculates your selected ship will require at least $DModServices_credits for a single modification.,,
-dmodservices_SelectionPickedShipIneligible,DModServicesPickedShipSelection,"$DModServices_notEligible == ""maxDMods""","SetEnabled dmodservicesSelectionPickDMod false
-SetTooltip dmodservicesSelectionPickDMod ""Ship cannot receive any more D-Mods from this service!""","The D-MOD representative tells you that your selected ship, unfortunately, cannot be damaged any further without risking a complete ship collapse.",,
-dmodservices_SelectionPickDModSel,DialogOptionSelected,$option == dmodservicesSelectionPickDMod,DMSShowDModPicker,,,
+DoCanAffordCheck $DModServices_credits dmodservicesSelectionPickDMod false",The D-MOD representative calculates that the $DModServices_pickedShipName will require at least $DModServices_credits for a single modification.,,
+dmodservices_SelectionPickedShipIneligible,DModServicesPickedShipSelection,"$DModServices_notEligible == ""maxDMods""","SetTextHighlights $DModServices_pickedShipName
+SetEnabled dmodservicesSelectionPickDMod false
+SetTooltip dmodservicesSelectionPickDMod ""Ship cannot receive any more D-Mods from this service!""","The D-MOD representative tells you that the $DModServices_pickedShipName, unfortunately, cannot be damaged any further without risking a complete ship collapse.",,
+dmodservices_SelectionPickDModSel,DialogOptionSelected,$option == dmodservicesSelectionPickDMod,DMSShowHullmodPicker dmod,,,
 dmodservices_SelectionGoBackSel,DialogOptionSelected,$option == dmodservicesSelectionGoBack,"DMSShowPlayerFleet
 FireAll DModServicesSelection",,,
 ,,,,,,
 # Selection: Selected D-Mod,,,,,,
-dmodservices_SelectionPickedDMod,DModServicesPickedDMod,,"DMSAddOptionConfirmation dmodservicesSelectionConfirm
+dmodservices_SelectionPickedDMod,DModServicesPickedDMod,,"SetTextHighlights $DModServices_pickedShipName $DModServices_newCredits
+DMSAddOptionConfirmation dmodservicesSelectionConfirm ""Confirm? The $DModServices_pickedShipName will receive the following D-Mods: $DModServices_pickedHullmodsDisplay""
 SetShortcut dmodservicesSelectionGoBack2 ""ESCAPE""
-SetTextHighlights $DModServices_newCredits
-AddText ""Selected D-Mods: $DModServices_pickedDModDisplay""
-SetTextHighlights $DModServices_pickedDModDisplay
+AddText ""Selected D-Mods: $DModServices_pickedHullmodsDisplay""
+SetTextHighlights $DModServices_pickedHullmodsDisplay
 SetTooltip dmodservicesSelectionConfirm ""Apply the selected D-Mods to the ship""
-DoCanAffordCheck $DModServices_newCredits dmodservicesSelectionConfirm false","The D-MOD representative confirms that, with the planned modifications, your selected ship will require $DModServices_newCredits to fully service it.","dmodservicesSelectionConfirm:Confirm
+DoCanAffordCheck $DModServices_newCredits dmodservicesSelectionConfirm false","The D-MOD representative confirms that, with the planned modifications, the $DModServices_pickedShipName will require $DModServices_newCredits to fully service it.","dmodservicesSelectionConfirm:Confirm
 dmodservicesSelectionGoBack2:Go back",
-dmodservices_SelectionConfirmSel,DialogOptionSelected,$option == dmodservicesSelectionConfirm,"DMSAddSelectedDMod
+dmodservices_SelectionConfirmSel,DialogOptionSelected,$option == dmodservicesSelectionConfirm,"SetTextHighlights $DModServices_pickedShipName
+DMSAddSelectedDMod
 AddCredits -$DModServices_newCredits
-AddTextSmall ""Selected ship now has $DModServices_pickedDModDisplay"" bad
-SetTextHighlights $DModServices_pickedDModDisplay
+AddTextSmall ""$DModServices_pickedShipName received: $DModServices_pickedHullmodsDisplay"" bad
+SetTextHighlights $DModServices_pickedShipName $DModServices_pickedHullmodsDisplay
 DMSShowPlayerFleet
-FireAll DModServicesSelection","You have sent your ship to the D-MOD's specialized engineers. Soon enough, your TriPad chimes with a notiifcation; your ship has now received its ""special modifications""!",,Adds the selected D-Mod to the selected ship
+FireAll DModServicesSelection","You have sent your ship to the D-MOD's specialized engineers. Soon enough, your TriPad chimes with a notiifcation; the $DModServices_pickedShipName has now received its ""special modifications""!",,Adds the selected D-Mod to the selected ship
 dmodservices_SelectionGoBack2Sel,DialogOptionSelected,$option == dmodservicesSelectionGoBack2,FireBest DModServicesPickedShip,,,
 ,,,,,,
 # D-MOD option 3: Automate (requires discovery of a certain defender fleet),,,,,,
@@ -143,26 +146,83 @@ dmodservices_AutomatePickShipSel,DialogOptionSelected,$option == dmodservicesAut
 dmodservices_AutomatePickedShipFirst,DModServicesPickedShip,$DModServices_optionPicked == 3,"SetShortcut dmodservicesAutomateGoBack ""ESCAPE""
 FireBest DModServicesPickedShipAutomate",,"dmodservicesAutomateConfirm:Confirm
 dmodservicesAutomateGoBack:Go back",
-dmodservices_AutomatePickedShip,DModServicesPickedShipAutomate,,"DMSAddOptionConfirmation dmodservicesAutomateConfirm
-SetTextHighlights $DModServices_credits
+dmodservices_AutomatePickedShip,DModServicesPickedShipAutomate,,"SetTextHighlights $DModServices_pickedShipName $DModServices_credits
+DMSAddOptionConfirmation dmodservicesAutomateConfirm ""Confirm? The $DModServices_pickedShipName will become fully-automated and receive a random D-Mod. In addition, the ship cannot be restored back to pristine condition.""
 SetTooltip dmodservicesAutomateConfirm ""Automates the ship, applies a random D-Mod, and prevents any further restoration""
-DoCanAffordCheck $DModServices_credits dmodservicesAutomateConfirm false",The D-MOD representative calculates that your selected ship requires $DModServices_credits to fully-automate it.,,
-dmodservices_AutomatePickedShipIneligibleA,DModServicesPickedShipAutomate,"$DModServices_notEligible == ""maxDMods""","SetEnabled dmodservicesAutomateConfirm false
-SetTooltip dmodservicesAutomateConfirm ""Ship has too many D-Mods to be automated!""","The D-MOD representative tells you that your selected ship, unfortunately, cannot be fully-automated, at least without turning it into a worthless pile of scrap.",,
-dmodservices_AutomatePickedShipIneligibleB,DModServicesPickedShipAutomate,"$DModServices_notEligible == ""alreadyAutomated""","SetEnabled dmodservicesAutomateConfirm false
-SetTooltip dmodservicesAutomateConfirm ""Ship is already automated!""","The D-MOD representative tells you that your selected ship is already automated and, thus, does not need any further specialist work.",,
-dmodservices_AutomatePickedShipIneligibleC,DModServicesPickedShipAutomate,"$DModServices_notEligible == ""noAutoFlagship""","SetEnabled dmodservicesAutomateConfirm false
-SetTooltip dmodservicesAutomateConfirm ""Ship cannot be automated while you remain in command of it.""",The D-MOD representative tells you that your flagship cannot be fully-automated while you still command it. You will need to transfer command to another ship before the automation can be done without undue risk.,,
-dmodservices_AutomatePickedShipIneligibleD,DModServicesPickedShipAutomate,"$DModServices_notEligible == ""officerInShip""","SetEnabled dmodservicesAutomateConfirm false
-SetTooltip dmodservicesAutomateConfirm ""Ship cannot be automated due to the presence of an officer in the ship.""","The D-MOD representative tells you that your selected ship cannot be fully-automated while an officer still remains in command of it. For safety reasons, you will need to remove your officer from the selected ship before any specialized automation can be applied.",,
-dmodservices_AutomatePickedShipIneligibleF,DModServicesPickedShipAutomate,"$DModServices_notEligible == ""incompatibleDMod""","SetEnabled dmodservicesAutomateConfirm false
-SetTooltip dmodservicesAutomateConfirm ""Ship cannot be automated due to an incompatible D-Mod or hull-mod!""","The D-MOD representative tells you that your selected ship cannot be fully-automated, as certain modifications, damaged or otherwise, within the ship completely interfere with any attempted automation retooling. You will need to restore the ship to a pristine condition - or else remove the offending modifications - before any automation work can be done.",,
-dmodservices_AutomateConfirmSel,DialogOptionSelected,$option == dmodservicesAutomateConfirm,"DMSAddRandomDMod true
-AddTextSmall ""Selected ship now fully-automated!"" good
-AddTextSmall ""Selected ship now has $DModServices_pickedDModDisplay"" bad
-SetTextHighlights $DModServices_pickedDModDisplay
-AddTextSmall ""Selected ship now rendered unrestorable!"" bad
+DoCanAffordCheck $DModServices_credits dmodservicesAutomateConfirm false",The D-MOD representative calculates that the $DModServices_pickedShipName requires $DModServices_credits to fully-automate it.,,
+dmodservices_AutomatePickedShipIneligibleA,DModServicesPickedShipAutomate,"$DModServices_notEligible == ""maxDMods""","SetTextHighlights $DModServices_pickedShipName
+SetEnabled dmodservicesAutomateConfirm false
+SetTooltip dmodservicesAutomateConfirm ""Ship has too many D-Mods to be automated!""","The D-MOD representative tells you that the $DModServices_pickedShipName, unfortunately, cannot be fully-automated, at least without turning it into a worthless pile of scrap.",,
+dmodservices_AutomatePickedShipIneligibleB,DModServicesPickedShipAutomate,"$DModServices_notEligible == ""alreadyAutomated""","SetTextHighlights $DModServices_pickedShipName
+SetEnabled dmodservicesAutomateConfirm false
+SetTooltip dmodservicesAutomateConfirm ""Ship is already automated!""","The D-MOD representative tells you that the $DModServices_pickedShipName is already automated and, thus, does not need any further specialist work.",,
+dmodservices_AutomatePickedShipIneligibleC,DModServicesPickedShipAutomate,"$DModServices_notEligible == ""noAutoFlagship""","SetTextHighlights $DModServices_pickedShipName
+SetEnabled dmodservicesAutomateConfirm false
+SetTooltip dmodservicesAutomateConfirm ""Ship cannot be automated while you remain in command of it.""",The D-MOD representative tells you that the $DModServices_pickedShipName cannot be fully-automated while you still command it. You will need to transfer command to another ship before the automation can be done without undue risk.,,
+dmodservices_AutomatePickedShipIneligibleD,DModServicesPickedShipAutomate,"$DModServices_notEligible == ""officerInShip""","SetTextHighlights $DModServices_pickedShipName
+SetEnabled dmodservicesAutomateConfirm false
+SetTooltip dmodservicesAutomateConfirm ""Ship cannot be automated due to the officer in charge.""","The D-MOD representative tells you that the $DModServices_pickedShipName cannot be fully-automated while an officer still remains in command of it. For safety reasons, you will need to remove your officer in command of the $DModServices_pickedShipName before any specialized automation can be applied.",,
+dmodservices_AutomatePickedShipIneligibleF,DModServicesPickedShipAutomate,"$DModServices_notEligible == ""fightersInShip""","SetEnabled dmodservicesAutomateConfirm false
+SetTooltip dmodservicesAutomateConfirm ""Ship cannot be automated due to the ship containing non-automated LPCs.""
+SetTextHighlights $DModServices_pickedShipName","The D-MOD representative tells you that the $DModServices_pickedShipName cannot be fully-automated while it is equipped with incompatible fighter LPCs. For compatibility reasons, you will need to unequip all modular, non-automated LPCs from the $DModServices_pickedShipName before it can be automated.",,
+dmodservices_AutomatePickedShipIneligibleG,DModServicesPickedShipAutomate,"$DModServices_notEligible == ""incompatibleDMod""","SetTextHighlights $DModServices_pickedShipName
+SetEnabled dmodservicesAutomateConfirm false
+SetTooltip dmodservicesAutomateConfirm ""Ship cannot be automated due to an incompatible D-Mod or hullmod!""","The D-MOD representative tells you that the $DModServices_pickedShipName cannot be fully-automated, as certain modifications, damaged or otherwise, within the ship completely interfere with any attempted automation retooling. You will need to restore the ship to a pristine condition - or else remove the offending modifications - before any automation work can be done.",,
+dmodservices_AutomateConfirmSel,DialogOptionSelected,$option == dmodservicesAutomateConfirm,"SetTextHighlights $DModServices_pickedShipName
+DMSAddRandomDMod true
+AddCredits -$DModServices_credits
+AddTextSmall ""$DModServices_pickedShipName has been converted to an automated ship!"" good
+SetTextHighlights $DModServices_pickedShipName
+AddTextSmall ""$DModServices_pickedShipName has received: $DModServices_pickedHullmodsDisplay"" bad
+SetTextHighlights $DModServices_pickedShipName $DModServices_pickedHullmodsDisplay
+AddTextSmall ""$DModServices_pickedShipName has been rendered unrestorable!"" bad
+SetTextHighlights $DModServices_pickedShipName
 DMSShowPlayerFleet
-FireAll DModServicesAutomate","D-MOD's best and brightest technicians and engineers have begun work on automating your selected ship. Before long, the ship is now fully-automated, its internal workings churning with the forbidden knowledge that had led to the First AI War. Not that anyone will stop you from exploiting this knowledge to its fullest extent, however.",,"Applies the ""Sentinel special"" to a ship"
+FireAll DModServicesAutomate","D-MOD's best and brightest technicians and engineers have begun work on automating the $DModServices_pickedShipName. Before long, the $DModServices_pickedShipName is now fully-automated, its internal workings churning with the forbidden knowledge that had led to the First AI War. Not that anyone will stop you from exploiting this knowledge to its fullest extent, however.",,"Applies the ""Sentinel special"" to a ship"
 dmodservices_AutomateGoBackSel,DialogOptionSelected,$option == dmodservicesAutomateGoBack,"DMSShowPlayerFleet
 FireAll DModServicesAutomate",,,
+,,,,,,
+# D-MOD option 4: Remove S-Mods,,,,,,
+dmodservices_SModsFirst,DialogOptionSelected,$option == dmodservicesSMods,"$DModServices_askedAboutSMods = true 0
+FireAll DModServicesSMods","You ask the D-MOD representative if they offer any services for removing special ship modifications - which you clarify as non-standard ship upgrades, not the so-called ""special modifications"" normally offered by D-MOD. The representative then provides you with the Terms and Conditions regarding this exclusive service, available only to ""those that prove themselves as a valuable partner"".
+
+D-MOD is well-known by spacers for their use of ""deconstructive"" methods, which also extends to disassembling unwanted ship modifications for captains feeling the ""modder's remorse"". D-MOD's team of expert ship mechanics and engineers can, with utmost precision and care, identify non-standard ship parts and tear them off the ship - all without causing any permanent damage to the ship.
+
+Of course, like any worthwhile service, it will cost a pretty millicredit, or so the D-MOD representative says. You consider your options as you pore through the representative's TriPad.",,
+dmodservices_SMods,DialogOptionSelected,"$option == dmodservicesSMods
+$DModServices_askedAboutSMods",FireAll DModServicesSMods,,,
+dmodservices_SModsPickShip,DModServicesSMods,,,,dmodservicesSModsPickShip:Select a ship to modify,
+dmodservices_SModsLeave,DModServicesSMods,,"SetShortcut dmodservicesGoBack ""ESCAPE""",,dmodservicesGoBack:Go back,
+dmodservices_SModsPickShipSel,DialogOptionSelected,$option == dmodservicesSModsPickShip,DMSShowShipPicker 4,,,
+,,,,,,
+# SMods: Selected ship,,,,,,
+dmodservices_SModsPickedShipStart,DModServicesPickedShip,$DModServices_optionPicked == 4,"SetShortcut dmodservicesSModsGoBack ""ESCAPE""
+FireBest DModServicesPickedShipSMods",,"dmodservicesSModsPickSMod:Select special modifications
+dmodservicesSModsGoBack:Go back",
+dmodservices_SModsPickedShip,DModServicesPickedShipSMods,,"SetTextHighlights $DModServices_pickedShipName $DModServices_credits
+SetTooltip dmodservicesSModsPickSMod ""Select S-Mods to remove from the ship""
+DoCanAffordCheck $DModServices_credits dmodservicesSModsPickSMod false",The D-MOD representative confirms that the $DModServices_pickedShipName will require at least $DModServices_credits to remove a special modification.,,
+dmodservices_SModsPickedShipIneligible,DModServicesPickedShipSMods,"$DModServices_notEligible == ""noSMods""","SetTextHighlights $DModServices_pickedShipName
+SetEnabled dmodservicesSModsPickSMod false
+SetTooltip dmodservicesSModsPickSMod ""Ship has no S-Mods to remove!""",The D-MOD representative tells you that the $DModServices_pickedShipName does not appear to have any special modifications that can be removed.,,
+dmodservices_SModsPickSModSel,DialogOptionSelected,$option == dmodservicesSModsPickSMod,DMSShowHullmodPicker smod,,,
+dmodservices_SModsGoBackSel,DialogOptionSelected,$option == dmodservicesSModsGoBack,"DMSShowPlayerFleet
+FireAll DModServicesSMods",,,
+,,,,,,
+# SMods: Selected S-Mod,,,,,,
+dmodservices_SModsPickedDMod,DModServicesPickedSMod,,"SetTextHighlights $DModServices_pickedShipName $DModServices_newCredits
+DMSAddOptionConfirmation dmodservicesSModsConfirm ""Confirm? The $DModServices_pickedShipName will have the following S-Mods removed: $DModServices_pickedHullmodsDisplay""
+SetShortcut dmodservicesSModsGoBack2 ""ESCAPE""
+AddText ""Selected S-Mods: $DModServices_pickedHullmodsDisplay""
+SetTextHighlights $DModServices_pickedHullmodsDisplay
+SetTooltip dmodservicesSModsConfirm ""Remove the selected S-Mods from the ship""
+DoCanAffordCheck $DModServices_newCredits dmodservicesSModsConfirm false",The D-MOD representative confirms tha the $DModServices_pickedShipName will require $DModServices_newCredits to fully remove all the selected special modifications.,"dmodservicesSModsConfirm:Confirm
+dmodservicesSModsGoBack2:Go back",
+dmodservices_SModsConfirmSel,DialogOptionSelected,$option == dmodservicesSModsConfirm,"SetTextHighlights $DModServices_pickedShipName
+DMSRemoveSMod
+AddCredits -$DModServices_newCredits
+AddTextSmall ""$DModServices_pickedShipName has lost: $DModServices_pickedHullmodsDisplay"" bad
+SetTextHighlights $DModServices_pickedShipName $DModServices_pickedHullmodsDisplay
+DMSShowPlayerFleet
+FireAll DModServicesSMods","You have sent your ship to the D-MOD's team of starship engineers. Some time later, you receive a notification on your TriPad; the D-MOD engineers have removed the requested special modifications from $DModServices_pickedShipName!",,Removes the selected S-Mod from the selected ship
+dmodservices_SModsGoBack2Sel,DialogOptionSelected,$option == dmodservicesSModsGoBack2,FireBest DModServicesPickedShip,,,

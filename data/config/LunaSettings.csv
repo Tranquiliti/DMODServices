@@ -1,5 +1,7 @@
 fieldID,fieldName,fieldType,defaultValue,fieldDescription,minValue,maxValue
 enableDMODServices,Enable D-MOD Services,Boolean,true,"Enables access to D-MOD service centers in [Size 6+ markets]. Disable this if your main market menu is getting too cluttered due to other mods, or if you do not plan on using the services during this playthrough.",,
-selectDModCostMult,Select D-Mod Cost Multiplier,Double,1.0,Cost multiplier for adding a selected D-Mod to a ship.,0,10
+selectDModCostMult,Select D-Mod Cost Multiplier,Double,1.0,Multiplies the base cost for adding a selected D-Mod to a ship. This does not change how the cost scales with additional D-Mods.,0,10
 makeUnrestorable,Select D-Mod Makes Ship Unrestorable,Boolean,false,"Adding a D-Mod through 'Select a D-Mod' option also [applies the 'Unrestorable' tag] to the selected ship, preventing any D-Mod removal from either dockyard restoration or the Hull Restoration skill.",,
 enableAutomateOption,Enable Automate Option,Boolean,false,"Adds the option of fully-automating your ships while visiting a D-MOD service center, but [only if you have discovered and defeated a certain defender fleet].",,
+automateCostMult,Automate Cost Multiplier,Double,3.0,Multiplies the base cost for automating a ship.,0,10
+removeSModCostMult,Remove S-Mod Cost Multiplier,Double,1.0,Multiplies the base cost for removing a selected S-Mod from a ship.,0,10
