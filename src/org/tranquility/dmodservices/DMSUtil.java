@@ -40,16 +40,32 @@ public final class DMSUtil {
         return hullSpec == null ? member.getHullSpec() : hullSpec;
     }
 
-    public static float getSelectDModCostBaseMult(int numOfDMods) {
+    public static float getSelectDModScalingCostMult(int numOfDMods) {
         return Math.min(numOfDMods * 0.15f + 0.4f, 1.0f);
     }
 
-    public static Float getSelectDModCostSettingMult() {
+    public static Float getSelectDModCostMultSetting() {
         if (LUNALIB_ENABLED) {
             Float multi = LunaSettings.getFloat(MOD_ID, "selectDModCostMult");
             if (multi != null) return multi;
         }
         return Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
+    }
+
+    public static Float getAutomateCostMultSetting() {
+        if (LUNALIB_ENABLED) {
+            Float multi = LunaSettings.getFloat(MOD_ID, "automateCostMult");
+            if (multi != null) return multi;
+        }
+        return Global.getSettings().getFloat("dmodservicesAutomateCostMult");
+    }
+
+    public static Float getRemoveSModCostMultSetting() {
+        if (LUNALIB_ENABLED) {
+            Float multi = LunaSettings.getFloat(MOD_ID, "removeSModCostMult");
+            if (multi != null) return multi;
+        }
+        return Global.getSettings().getFloat("dmodservicesRemoveSModCostMult");
     }
 
     public static void addPermaMod(ShipVariantAPI variant, String hullModId) {

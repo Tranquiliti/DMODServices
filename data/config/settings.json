@@ -8,8 +8,9 @@
 	# or if you do not plan on using the services during your current playthrough.
 	"dmodservicesEnableDMODServices":true,
 
-	# Cost multiplier for adding a selected D-Mod to a ship.
-	# Defaults to base credit value of a pristine ship
+	# Multiplies the base cost for adding a selected D-Mod to a ship
+	# This does not change how the cost scales with additional D-Mods.
+	# Defaults to up to base credit value of a pristine ship
 	"dmodservicesSelectDModCostMult":1.0,
 
 	# If enabled, applying a D-Mod through the 'Select a D-Mod' option
@@ -22,6 +23,13 @@
 	# but only if you have discovered and defeated a certain defender fleet.
 	"dmodservicesEnableAutomateOption":false,
 
+	# Multiplies the base cost for automating a ship.
+	# Defaults to 3x times the base credit value of a pristine ship
+	"dmodservicesAutomateCostMult":3.0,
+
+	# Multiplies the base cost for removing a selected S-Mod from a ship.
+	# Defaults to base credit value of a pristine ship
+	"dmodservicesRemoveSModCostMult":1.0,
 
 
 	# Other
