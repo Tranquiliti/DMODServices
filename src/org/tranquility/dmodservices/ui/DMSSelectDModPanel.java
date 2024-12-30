@@ -1,6 +1,5 @@
 package org.tranquility.dmodservices.ui;
 
-import com.fs.starfarer.api.campaign.BaseCustomUIPanelPlugin;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.rules.MemKeys;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
@@ -22,12 +21,7 @@ import java.util.Map;
 
 import static org.tranquility.dmodservices.DMSUtil.*;
 
-@SuppressWarnings("unchecked")
-public class DMSSelectDModPanel extends BaseCustomUIPanelPlugin {
-    private InteractionDialogAPI dialog;
-    private Map<String, MemoryAPI> memoryMap;
-    private Map<String, ButtonAPI> buttons;
-    private int buttonsChecked;
+public class DMSSelectDModPanel extends DMSSelectHullmodPanelPlugin {
     private int numExistingDMods;
     private boolean allowDamageStruct;
 
@@ -48,14 +42,15 @@ public class DMSSelectDModPanel extends BaseCustomUIPanelPlugin {
         }
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
     public void init(CustomPanelAPI panel, InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap) {
         this.dialog = dialog;
         this.memoryMap = memoryMap;
-        buttonsChecked = 0;
         numExistingDMods = DModManager.getNumDMods(((FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get(MEM_PICKED_SHIP)).getVariant());
         allowDamageStruct = true;
 
-        List<HullModSpecAPI> potentialDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get(MEM_ELIGIBLE_DMODS);
+        List<HullModSpecAPI> potentialDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get(MEM_ELIGIBLE_HULLMODS);
         buttons = new LinkedHashMap<>(potentialDMods.size());
         TooltipMakerAPI tooltip = panel.createUIElement(panel.getPosition().getWidth(), panel.getPosition().getHeight(), true);
         for (HullModSpecAPI thisHullMod : potentialDMods) {
@@ -67,6 +62,7 @@ public class DMSSelectDModPanel extends BaseCustomUIPanelPlugin {
         panel.addUIElement(tooltip);
     }
 
+    @Override
     public void confirm() {
         if (buttonsChecked <= 0) return;
 
@@ -91,8 +87,8 @@ public class DMSSelectDModPanel extends BaseCustomUIPanelPlugin {
             display.append(hullMod.getDisplayName()).append(separator);
         display.delete(display.length() - separator.length(), display.length());
 
-        localMemory.set(MEM_PICKED_DMODS, checked, 0f);
-        localMemory.set(MEM_PICKED_DMOD_DISPLAY, display.toString(), 0f);
+        localMemory.set(MEM_PICKED_HULLMODS, checked, 0f);
+        localMemory.set(MEM_PICKED_HULLMODS_DISPLAY, display.toString(), 0f);
         localMemory.set(MEM_NEW_CREDITS, Misc.getDGSCredits(newCredits), 0f);
 
         FireBest.fire(null, dialog, memoryMap, "DModServicesPickedDMod");

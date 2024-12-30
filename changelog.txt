@@ -1,12 +1,17 @@
-Version 2.1.1
+Version 2.2.0
 
+* Added the ability to remove S-Mods from ships!
+  - Costs credits per S-Mod removed; no bonus XP is awarded if S-Mods are removed this way
+  - Requires finishing a certain side-quest to unlock
 * Slight UI changes for the ship picker
 * "Automate" option can no longer be applied to ships with equipped modular, non-automated fighter LPCs
   - This limitation should prevent converted automated ships from maintaining their crewed fighter LPCs
 * Fixed "Select D-Mod" confirmation popup not showing the list of D-Mods
+* Fixed "Automate" option not actually deducting credits upon confirmation
 * Some text changes:
   - Text now displays the name of the selected ship
   - Text should now have properly-highlighted words
+* Major code and rules.csv refactors
 
 
 

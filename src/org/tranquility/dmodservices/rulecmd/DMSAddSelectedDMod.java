@@ -17,14 +17,15 @@ import java.util.Map;
 
 import static org.tranquility.dmodservices.DMSUtil.*;
 
-@SuppressWarnings({"unused", "unchecked"})
+@SuppressWarnings("unused")
 public class DMSAddSelectedDMod extends BaseCommandPlugin {
     @Override
+    @SuppressWarnings("unchecked")
     public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
         if (dialog == null) return false;
 
         FleetMemberAPI member = (FleetMemberAPI) memoryMap.get(MemKeys.LOCAL).get(MEM_PICKED_SHIP);
-        List<HullModSpecAPI> pickedDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get(MEM_PICKED_DMODS);
+        List<HullModSpecAPI> pickedDMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get(MEM_PICKED_HULLMODS);
         DModManager.setDHull(member.getVariant());
         for (HullModSpecAPI picked : pickedDMods)
             addPermaMod(member.getVariant(), picked.getId());
