@@ -81,13 +81,13 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
                     credits = member.getStatus().getHullFraction() > 0.05f ? member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec(Commodities.SUPPLIES).getBasePrice() : 10f;
                     break;
                 case 2: // Selected D-Mod
-                    credits = getSelectDModCostBaseMult(DModManager.getNumDMods(member.getVariant())) * getPristineHullSpec(member).getBaseValue() * getSelectDModCostSettingMult();
+                    credits = getSelectDModScalingCostMult(DModManager.getNumDMods(member.getVariant())) * getPristineHullSpec(member).getBaseValue() * getSelectDModCostMultSetting();
                     break;
                 case 3: // Automating ship
-                    credits = getPristineHullSpec(member).getBaseValue() * 3.0f;
+                    credits = getPristineHullSpec(member).getBaseValue() * getAutomateCostMultSetting();
                     break;
                 case 4: // Removing S-Mod
-                    credits = getPristineHullSpec(member).getBaseValue();
+                    credits = getPristineHullSpec(member).getBaseValue() * getRemoveSModCostMultSetting();
                     break;
             }
             localMemory.set(MEM_CREDITS, Misc.getDGSCredits(credits), 0f);

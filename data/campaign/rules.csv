@@ -22,7 +22,7 @@ dmodservices_RandomOption,PopulateDModServicesOptions,,,,dmodservicesRandom:Offe
 dmodservices_SelectionOption,PopulateDModServicesOptions,,,,"dmodservicesSelection:Request ""special modifications"" for a ship",
 dmodservices_AutomateOption,PopulateDModServicesOptions,"$global.DModServices_enableAutomate
 $global.pkCacheDefendersDefeated",,,dmodservicesAutomate:Apply automated systems to a ship,Option only appears if a certain [REDACTED] fleet has been defeated
-dmodservices_SModsOption,PopulateDModServicesOptions,$global.sdtu_missionCompleted,,,dmodservicesSMods:Ask for special modifications removal on a ship,Option only appears if the Usurpers questline has been completed (TODO: do the same if the Sindrian Diktat Colony Crisis has been resolved - violently)
+dmodservices_SModsOption,PopulateDModServicesOptions,$global.sdtu_missionCompleted,,,dmodservicesSMods:Ask for special modifications removal on a ship,Option only appears if the Usurpers questline has been completed
 dmodservices_Leave,PopulateDModServicesOptions,,"SetShortcut dmodservicesLeave ""ESCAPE""",,dmodservicesLeave:Leave the service center,
 dmodservices_LeaveSel,DialogOptionSelected,$option == dmodservicesLeave,"ShowDefaultVisual
 FireAll PopulateOptions",,,Going back to market main menu
@@ -184,7 +184,7 @@ FireAll DModServicesAutomate",,,
 ,,,,,,
 # D-MOD option 4: Remove S-Mods,,,,,,
 dmodservices_SModsFirst,DialogOptionSelected,$option == dmodservicesSMods,"$DModServices_askedAboutSMods = true 0
-FireAll DModServicesSMods","You ask the D-MOD representative if they offer any services for removing special ship modifications - which you clarify as non-standard ship upgrades, not the so-called ""special modifications"" normally offered by D-MOD. The representative then provides you with the terms and conditions regarding this exclusive service, available only to ""those that prove themselves as a valuable partner"".
+FireAll DModServicesSMods","You ask the D-MOD representative if they offer any services for removing special ship modifications - which you clarify as non-standard ship upgrades, not the so-called ""special modifications"" normally offered by D-MOD. The representative then provides you with the Terms and Conditions regarding this exclusive service, available only to ""those that prove themselves as a valuable partner"".
 
 D-MOD is well-known by spacers for their use of ""deconstructive"" methods, which also extends to disassembling unwanted ship modifications for captains feeling the ""modder's remorse"". D-MOD's team of expert ship mechanics and engineers can, with utmost precision and care, identify non-standard ship parts and tear them off the ship - all without causing any permanent damage to the ship.
 

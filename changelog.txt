@@ -2,10 +2,11 @@ Version 2.2.0
 
 * Added the ability to remove S-Mods from ships!
   - Costs credits per S-Mod removed; no bonus XP is awarded if S-Mods are removed this way
-  - Requires finishing a certain side-quest to unlock
+  - Requires finishing a certain vanilla side-quest to unlock
 * Slight UI changes for the ship picker
 * "Automate" option can no longer be applied to ships with equipped modular, non-automated fighter LPCs
   - This limitation should prevent converted automated ships from maintaining their crewed fighter LPCs
+* Added ability to change cost multipliers for "Automate" and "Remove S-Mod" options in settings.json and LunaSettings
 * Fixed "Select D-Mod" confirmation popup not showing the list of D-Mods
 * Fixed "Automate" option not actually deducting credits upon confirmation
 * Some text changes:

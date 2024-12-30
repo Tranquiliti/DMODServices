@@ -76,9 +76,9 @@ public class DMSSelectDModPanel extends DMSSelectHullmodPanelPlugin {
         // Increase the overall price with each additional D-Mod
         if (checked.size() > 1) {
             float baseValue = DMSUtil.getPristineHullSpec((FleetMemberAPI) localMemory.get(MEM_PICKED_SHIP)).getBaseValue();
-            float multi = DMSUtil.getSelectDModCostSettingMult();
+            float multi = DMSUtil.getSelectDModCostMultSetting();
             for (int i = 1; i < checked.size(); i++)
-                newCredits += getSelectDModCostBaseMult(numExistingDMods + i) * baseValue * multi;
+                newCredits += getSelectDModScalingCostMult(numExistingDMods + i) * baseValue * multi;
         }
 
         StringBuilder display = new StringBuilder();
