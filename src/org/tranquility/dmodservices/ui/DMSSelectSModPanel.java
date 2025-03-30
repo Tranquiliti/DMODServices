@@ -36,7 +36,7 @@ public class DMSSelectSModPanel extends DMSSelectHullmodPanelPlugin {
         for (HullModSpecAPI thisHullMod : sMods) {
             float imageSize = 25f;
             ButtonAPI button = tooltip.addAreaCheckbox(thisHullMod.getDisplayName(), thisHullMod, Misc.getButtonTextColor(), Misc.getDarkPlayerColor(), Misc.getPositiveHighlightColor(), panel.getPosition().getWidth() - 25f, imageSize, 5f);
-            tooltip.addImage(thisHullMod.getSpriteName(), imageSize, imageSize, -25f); // Hacky way of "attaching" D-Mod sprite to area checkbox
+            tooltip.addImage(thisHullMod.getSpriteName(), imageSize, imageSize, -25f); // Hacky way of "attaching" hullmod sprite to area checkbox
             buttons.put(thisHullMod.getId(), button);
         }
         panel.addUIElement(tooltip);

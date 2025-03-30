@@ -1,3 +1,9 @@
+Version 3.0.0 (Update for Starsector 0.98a)
+
+* Compiled to Java 17
+
+
+
 Version 2.2.0
 
 * Added the ability to remove S-Mods from ships!
@@ -21,31 +27,3 @@ Version 2.1.0
 * "Random D-Mod" option now has a slider to choose how many random D-Mods are added per confirm
 * Changed the dialogue flow when interacting with D-MOD; now a bit more receptive to "Press 1" spam
 * Major code and rules.csv refactors
-
-
-
-Version 2.0.0 (Update for Starsector 0.97)
-
-* Updated to Starsector 0.97
-
-
-
-Version 1.0.1
-
-* Fixed the LunaLib soft dependency
-    - This means this mod no longer requires either LunaLib or Java 8 to run
-* "Select D-Mod" option now correctly sorts the selected D-Mods based on their display name
-* Changed some text
-* Refactored some code
-
-
-
-Version 1.0.0
-
-* "Select D-Mod" option can now select for multiple D-Mods at once!
-  - D-Mod selection still abides by vanilla D-Mod rules (e.g. can only add D-Mods up to usual max, Compromised Armor/Hull being mutually-exclusive)
-  - Price will change based on existing and planned D-Mods, but total price for adding 5 D-Mods should remain the same as before.
-  - Now also displays D-Mod images to help identify desired D-Mods
-* "Select D-Mod" and "Automate" prices now instead consider the base value of the selected ship's pristine equivalent
-  - This should fix most instances where overall prices were less than intended due to (D) hulls having a lower base value.
-* Changed source code packages and classes to be more readable

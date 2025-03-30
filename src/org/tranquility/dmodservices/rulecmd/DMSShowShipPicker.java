@@ -16,7 +16,10 @@ import com.fs.starfarer.api.impl.campaign.rulecmd.FireBest;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 import static org.tranquility.dmodservices.DMSUtil.*;
 
@@ -75,21 +78,17 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
             localMemory.set(MEM_ELIGIBLE_HULLMODS, potentialHullmods, 0f);
 
             // Set credit price/gain based on picked option
-            float credits = 0f;
-            switch (pickOption) {
-                case 1: // Random D-Mod
-                    credits = member.getStatus().getHullFraction() > 0.05f ? member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec(Commodities.SUPPLIES).getBasePrice() : 10f;
-                    break;
-                case 2: // Selected D-Mod
-                    credits = getSelectDModScalingCostMult(DModManager.getNumDMods(member.getVariant())) * getPristineHullSpec(member).getBaseValue() * getSelectDModCostMultSetting();
-                    break;
-                case 3: // Automating ship
-                    credits = getPristineHullSpec(member).getBaseValue() * getAutomateCostMultSetting();
-                    break;
-                case 4: // Removing S-Mod
-                    credits = getPristineHullSpec(member).getBaseValue() * getRemoveSModCostMultSetting();
-                    break;
-            }
+            float credits = switch (pickOption) {
+                case 1 -> // Random D-Mod
+                        member.getStatus().getHullFraction() > 0.05f ? member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec(Commodities.SUPPLIES).getBasePrice() : 10f;
+                case 2 -> // Selected D-Mod
+                        getSelectDModScalingCostMult(DModManager.getNumDMods(member.getVariant())) * getPristineHullSpec(member).getBaseValue() * getSelectDModCostMultSetting();
+                case 3 -> // Automating ship
+                        getPristineHullSpec(member).getBaseValue() * getAutomateCostMultSetting();
+                case 4 -> // Removing S-Mod
+                        getPristineHullSpec(member).getBaseValue() * getRemoveSModCostMultSetting();
+                default -> 0f;
+            };
             localMemory.set(MEM_CREDITS, Misc.getDGSCredits(credits), 0f);
         }
     }
@@ -119,12 +118,7 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
         // No duplicate D-Mods
         DModManager.removeModsAlreadyInVariant(variant, potentialMods);
 
-        Collections.sort(potentialMods, new Comparator<HullModSpecAPI>() {
-            @Override
-            public int compare(HullModSpecAPI h1, HullModSpecAPI h2) {
-                return h1.getDisplayName().compareTo(h2.getDisplayName());
-            }
-        });
+        potentialMods.sort(Comparator.comparing(HullModSpecAPI::getDisplayName));
 
         return potentialMods;
     }
@@ -134,12 +128,7 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
         for (String id : member.getVariant().getSMods())
             potentialMods.add(Global.getSettings().getHullModSpec(id));
 
-        Collections.sort(potentialMods, new Comparator<HullModSpecAPI>() {
-            @Override
-            public int compare(HullModSpecAPI h1, HullModSpecAPI h2) {
-                return h1.getDisplayName().compareTo(h2.getDisplayName());
-            }
-        });
+        potentialMods.sort(Comparator.comparing(HullModSpecAPI::getDisplayName));
 
         return potentialMods;
     }
