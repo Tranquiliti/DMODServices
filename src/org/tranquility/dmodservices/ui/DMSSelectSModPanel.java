@@ -17,8 +17,7 @@ import java.util.Map;
 
 import static org.tranquility.dmodservices.DMSUtil.*;
 
-public class DMSSelectSModPanel extends DMSSelectHullmodPanelPlugin {
-
+public class DMSSelectSModPanel extends DMSSelectHullmodPanel {
     @Override
     public void buttonPressed(Object buttonId) {
         buttonsChecked += buttons.get(((HullModSpecAPI) buttonId).getId()).isChecked() ? 1 : -1;
@@ -53,7 +52,7 @@ public class DMSSelectSModPanel extends DMSSelectHullmodPanelPlugin {
         MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
         float newCredits = Float.parseFloat(((String) localMemory.get(MEM_CREDITS)).replaceAll("[^0-9]", ""));
 
-        // Increase the overall price with each additional S-Mod
+        // Increase the overall price with each additional s-mod
         newCredits *= checked.size();
 
         StringBuilder display = new StringBuilder();

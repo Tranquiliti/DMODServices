@@ -9,11 +9,11 @@ import com.fs.starfarer.api.ui.CustomPanelAPI;
 import java.util.Map;
 
 public class DMSHullmodDelegate extends BaseCustomDialogDelegate {
-    private final DMSSelectHullmodPanelPlugin plugin;
+    private final DMSSelectHullmodPanel plugin;
     private final InteractionDialogAPI dialog;
     private final Map<String, MemoryAPI> memoryMap;
 
-    public DMSHullmodDelegate(DMSSelectHullmodPanelPlugin plugin, InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap) {
+    public DMSHullmodDelegate(DMSSelectHullmodPanel plugin, InteractionDialogAPI dialog, Map<String, MemoryAPI> memoryMap) {
         this.plugin = plugin;
         this.dialog = dialog;
         this.memoryMap = memoryMap;

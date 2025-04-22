@@ -62,12 +62,12 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
         MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
         localMemory.set(MEM_OPTION_PICKED, pickOption, 0f); // Store the selected option for later use
 
-        List<HullModSpecAPI> potentialHullmods = pickOption != 4 ? getPotentialDMods(member.getVariant(), pickOption == 2, pickOption == 3) : getSMods(member);
+        List<HullModSpecAPI> potentialMods = pickOption != 4 ? getPotentialDMods(member.getVariant(), pickOption == 2, pickOption == 3) : getSMods(member);
 
         // Check for eligibility
         localMemory.unset(MEM_NOT_ELIGIBLE);
-        if (pickOption == 4 && potentialHullmods.isEmpty()) localMemory.set(MEM_NOT_ELIGIBLE, "noSMods", 0f);
-        else if (DModManager.getNumDMods(member.getVariant()) >= DModManager.MAX_DMODS_FROM_COMBAT || potentialHullmods.isEmpty())
+        if (pickOption == 4 && potentialMods.isEmpty()) localMemory.set(MEM_NOT_ELIGIBLE, "noSMods", 0f);
+        else if (DModManager.getNumDMods(member.getVariant()) >= DModManager.MAX_DMODS_FROM_COMBAT || potentialMods.isEmpty())
             localMemory.set(MEM_NOT_ELIGIBLE, "maxDMods", 0f);
         else if (pickOption == 3) { // When automating a ship
             String autoReason = canBeAutomated(member);
@@ -75,17 +75,18 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
         }
 
         if (!localMemory.contains(MEM_NOT_ELIGIBLE)) {
-            localMemory.set(MEM_ELIGIBLE_HULLMODS, potentialHullmods, 0f);
+            potentialMods.sort(Comparator.comparing(HullModSpecAPI::getDisplayName));
+            localMemory.set(MEM_ELIGIBLE_HULLMODS, potentialMods, 0f);
 
             // Set credit price/gain based on picked option
             float credits = switch (pickOption) {
-                case 1 -> // Random D-Mod
-                        member.getStatus().getHullFraction() > 0.05f ? member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec(Commodities.SUPPLIES).getBasePrice() : 10f;
-                case 2 -> // Selected D-Mod
+                case 1 -> // Random d-mod
+                        Math.max(0.75f * member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec(Commodities.SUPPLIES).getBasePrice(), 100f);
+                case 2 -> // Selected d-mod
                         getSelectDModScalingCostMult(DModManager.getNumDMods(member.getVariant())) * getPristineHullSpec(member).getBaseValue() * getSelectDModCostMultSetting();
                 case 3 -> // Automating ship
                         getPristineHullSpec(member).getBaseValue() * getAutomateCostMultSetting();
-                case 4 -> // Removing S-Mod
+                case 4 -> // Removing s-mod
                         getPristineHullSpec(member).getBaseValue() * getRemoveSModCostMultSetting();
                 default -> 0f;
             };
@@ -93,7 +94,7 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
         }
     }
 
-    // Similar implementation to DModManager's addDMods(), but returns a sorted list of eligible D-Mods
+    // Similar implementation to DModManager's addDMods(), but simply returns a list of eligible d-mods
     private List<HullModSpecAPI> getPotentialDMods(ShipVariantAPI variant, boolean canAddDestroyedMods, boolean assumeAllShipsAreAutomated) {
         List<HullModSpecAPI> potentialMods = DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE);
         boolean prevAssume = DModManager.assumeAllShipsAreAutomated;
@@ -112,23 +113,19 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
 
         if (variant.isCarrier()) potentialMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_CARRIER_ALWAYS));
 
-        // Destroyed ships always get these D-Mods, so put them in list if allowed
+        // Destroyed ships always get these d-mods, so put them in list if allowed
         if (canAddDestroyedMods) potentialMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_DESTROYED_ALWAYS));
 
-        // No duplicate D-Mods
+        // No duplicate d-mods
         DModManager.removeModsAlreadyInVariant(variant, potentialMods);
-
-        potentialMods.sort(Comparator.comparing(HullModSpecAPI::getDisplayName));
 
         return potentialMods;
     }
 
     private List<HullModSpecAPI> getSMods(FleetMemberAPI member) {
-        List<HullModSpecAPI> potentialMods = new ArrayList<>();
+        List<HullModSpecAPI> potentialMods = new ArrayList<>(3);
         for (String id : member.getVariant().getSMods())
             potentialMods.add(Global.getSettings().getHullModSpec(id));
-
-        potentialMods.sort(Comparator.comparing(HullModSpecAPI::getDisplayName));
 
         return potentialMods;
     }

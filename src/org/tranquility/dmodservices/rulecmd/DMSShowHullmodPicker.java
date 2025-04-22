@@ -7,6 +7,7 @@ import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
 import com.fs.starfarer.api.util.Misc;
 import org.tranquility.dmodservices.ui.DMSHullmodDelegate;
 import org.tranquility.dmodservices.ui.DMSSelectDModPanel;
+import org.tranquility.dmodservices.ui.DMSSelectHullmodPanel;
 import org.tranquility.dmodservices.ui.DMSSelectSModPanel;
 
 import java.util.List;
@@ -18,7 +19,8 @@ public class DMSShowHullmodPicker extends BaseCommandPlugin {
     public boolean execute(String ruleId, final InteractionDialogAPI dialog, List<Misc.Token> params, final Map<String, MemoryAPI> memoryMap) {
         if (dialog == null) return false;
 
-        dialog.showCustomDialog(325f, 480f, new DMSHullmodDelegate(params.get(0).getString(memoryMap).equals(Tags.HULLMOD_DMOD) ? new DMSSelectDModPanel() : new DMSSelectSModPanel(), dialog, memoryMap));
+        DMSSelectHullmodPanel panel = params.get(0).getString(memoryMap).equals(Tags.HULLMOD_DMOD) ? new DMSSelectDModPanel() : new DMSSelectSModPanel();
+        dialog.showCustomDialog(325f, 480f, new DMSHullmodDelegate(panel, dialog, memoryMap));
         return true;
     }
 }
