@@ -8,7 +8,7 @@ import com.fs.starfarer.api.ui.CustomPanelAPI;
 
 import java.util.Map;
 
-public abstract class DMSSelectHullmodPanelPlugin extends BaseCustomUIPanelPlugin {
+public abstract class DMSSelectHullmodPanel extends BaseCustomUIPanelPlugin {
     protected InteractionDialogAPI dialog;
     protected Map<String, MemoryAPI> memoryMap;
     protected Map<String, ButtonAPI> buttons;

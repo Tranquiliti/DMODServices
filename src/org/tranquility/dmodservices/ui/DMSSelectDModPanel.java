@@ -21,7 +21,7 @@ import java.util.Map;
 
 import static org.tranquility.dmodservices.DMSUtil.*;
 
-public class DMSSelectDModPanel extends DMSSelectHullmodPanelPlugin {
+public class DMSSelectDModPanel extends DMSSelectHullmodPanel {
     private int numExistingDMods;
     private boolean allowDamageStruct;
 
@@ -56,7 +56,7 @@ public class DMSSelectDModPanel extends DMSSelectHullmodPanelPlugin {
         for (HullModSpecAPI thisHullMod : potentialDMods) {
             float imageSize = 25f;
             ButtonAPI button = tooltip.addAreaCheckbox(thisHullMod.getDisplayName(), thisHullMod, Misc.getButtonTextColor(), Misc.getDarkPlayerColor(), Misc.getNegativeHighlightColor(), panel.getPosition().getWidth() - 25f, imageSize, 5f);
-            tooltip.addImage(thisHullMod.getSpriteName(), imageSize, imageSize, -25f); // Hacky way of "attaching" D-Mod sprite to area checkbox
+            tooltip.addImage(thisHullMod.getSpriteName(), imageSize, imageSize, -25f); // Hacky way of "attaching" d-mod sprite to area checkbox
             buttons.put(thisHullMod.getId(), button);
         }
         panel.addUIElement(tooltip);
@@ -73,7 +73,7 @@ public class DMSSelectDModPanel extends DMSSelectHullmodPanelPlugin {
         MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
         float newCredits = Float.parseFloat(((String) localMemory.get(MEM_CREDITS)).replaceAll("[^0-9]", ""));
 
-        // Increase the overall price with each additional D-Mod
+        // Increase the overall price with each additional d-mod
         if (checked.size() > 1) {
             float baseValue = DMSUtil.getPristineHullSpec((FleetMemberAPI) localMemory.get(MEM_PICKED_SHIP)).getBaseValue();
             float multi = DMSUtil.getSelectDModCostMultSetting();

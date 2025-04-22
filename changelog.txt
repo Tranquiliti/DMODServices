@@ -1,3 +1,12 @@
+Version 3.0.1
+
+* Adjusted credit gain for the "Random d-mod" option
+* Added unique dialogue for the "Random d-mod" option
+* Adjusted some text
+* Minor code refactors
+
+
+
 Version 3.0.0 (Update for Starsector 0.98a)
 
 * Compiled to Java 17
