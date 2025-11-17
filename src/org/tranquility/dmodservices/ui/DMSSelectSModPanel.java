@@ -65,6 +65,6 @@ public class DMSSelectSModPanel extends DMSSelectHullmodPanel {
         localMemory.set(MEM_PICKED_HULLMODS_DISPLAY, display.toString(), 0f);
         localMemory.set(MEM_NEW_CREDITS, Misc.getDGSCredits(newCredits), 0f);
 
-        FireBest.fire(null, dialog, memoryMap, "DModServicesPickedSMod");
+        FireBest.fire(null, dialog, memoryMap, "DMODServicesPickedSMod");
     }
 }

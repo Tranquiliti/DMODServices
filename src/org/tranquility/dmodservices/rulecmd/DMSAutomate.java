@@ -11,6 +11,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.rulecmd.BaseCommandPlugin;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
+import lunalib.lunaSettings.LunaSettings;
 
 import java.util.List;
 import java.util.Map;
@@ -35,8 +36,20 @@ public class DMSAutomate extends BaseCommandPlugin {
         localMemory.set(MEM_PICKED_HULLMODS_DISPLAY, pickedDMod.getDisplayName(), 0f);
 
         member.getVariant().addPermaMod(HullMods.AUTOMATED);
-        member.getVariant().addTag(Tags.TAG_AUTOMATED_NO_PENALTY);
-        member.getVariant().addTag(Tags.VARIANT_UNRESTORABLE);
+        Boolean addNoAutoPenalty;
+        if (LUNALIB_ENABLED) {
+            addNoAutoPenalty = LunaSettings.getBoolean(MOD_ID, SETTING_AUTOMATE_ADD_NO_AUTO_PENALTY);
+            if (addNoAutoPenalty == null) addNoAutoPenalty = getSettingBoolean(SETTING_AUTOMATE_ADD_NO_AUTO_PENALTY);
+        } else addNoAutoPenalty = getSettingBoolean(SETTING_AUTOMATE_ADD_NO_AUTO_PENALTY);
+        if (addNoAutoPenalty) member.getVariant().addTag(Tags.TAG_AUTOMATED_NO_PENALTY);
+
+        Boolean addUnrestorable;
+        if (LUNALIB_ENABLED) {
+            addUnrestorable = LunaSettings.getBoolean(MOD_ID, SETTING_AUTOMATE_ADD_UNRESTORABLE);
+            if (addUnrestorable == null) addUnrestorable = getSettingBoolean(SETTING_AUTOMATE_ADD_UNRESTORABLE);
+        } else addUnrestorable = getSettingBoolean(SETTING_AUTOMATE_ADD_UNRESTORABLE);
+        if (addUnrestorable) member.getVariant().addTag(Tags.VARIANT_UNRESTORABLE);
+
         member.getRepairTracker().setCR(0f);
         DModManager.setDHull(member.getVariant());
 

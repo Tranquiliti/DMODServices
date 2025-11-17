@@ -1,3 +1,18 @@
+Version 3.1.0
+
+* Adjusted setting IDs for both setting.json and LunaSettings
+  - This may reset existing LunaSettings for this mod
+* Added "removeSModRemoveUnrestorable" setting
+  - If enabled, removing at least the base maximum number of s-mods from a ship also removes its 'unrestorable' tag
+* Added "automateAddUnrestorable" and "automateNoAutoPenalty" settings for the "Automate" option
+  - Options allow toggling the 'unrestorable'/'no_auto_penalty' tag addition when automating ships
+* Renamed "makeUnrestorable" setting to "selectDModAddUnrestorable"
+* Increased number of ships needed before the ship picker UI goes wide
+* Fixed "Remove s-mod" option displaying the wrong hullmods if the ship had the max number of d-mods
+* Major code and rules.csv refactors
+
+
+
 Version 3.0.1
 
 * Adjusted credit gain for the "Random d-mod" option

@@ -31,7 +31,7 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
 
         List<FleetMemberAPI> members = new ArrayList<>(Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy());
         int cols = Math.max(Math.min(members.size(), 7), 4);
-        if (members.size() > 30) cols = 12; // More than 30 ships, so just go wide instead
+        if (members.size() > 35) cols = 12; // More than 35 ships, so just go wide instead
         int rows = (members.size() - 1) / cols + 1;
 
         dialog.showFleetMemberPickerDialog(PICK_SHIP_TITLE, PICK_SHIP_OK_TEXT, PICK_SHIP_CANCEL_TEXT, rows, cols, 96, true, false, members, new FleetMemberPickerListener() {
@@ -46,7 +46,7 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
 
                 validateShip(member, dialog, params, memoryMap);
 
-                FireBest.fire(null, dialog, memoryMap, "DModServicesPickedShip");
+                FireBest.fire(null, dialog, memoryMap, "DMODServicesPickedShip");
             }
 
             @Override
@@ -58,21 +58,21 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
     }
 
     private void validateShip(FleetMemberAPI member, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap) {
-        int pickOption = params.get(0).getInt(memoryMap);
+        String pickOption = params.get(0).getString(memoryMap);
         MemoryAPI localMemory = memoryMap.get(MemKeys.LOCAL);
         localMemory.set(MEM_OPTION_PICKED, pickOption, 0f); // Store the selected option for later use
 
-        List<HullModSpecAPI> potentialMods = pickOption != 4 ? getPotentialDMods(member.getVariant(), pickOption == 2, pickOption == 3) : getSMods(member);
+        List<HullModSpecAPI> potentialMods = !pickOption.equals("smods") ? getPotentialDMods(member.getVariant(), pickOption.equals("selection"), pickOption.equals("automate")) : getSMods(member);
 
         // Check for eligibility
         localMemory.unset(MEM_NOT_ELIGIBLE);
-        if (pickOption == 4 && potentialMods.isEmpty()) localMemory.set(MEM_NOT_ELIGIBLE, "noSMods", 0f);
-        else if (DModManager.getNumDMods(member.getVariant()) >= DModManager.MAX_DMODS_FROM_COMBAT || potentialMods.isEmpty())
-            localMemory.set(MEM_NOT_ELIGIBLE, "maxDMods", 0f);
-        else if (pickOption == 3) { // When automating a ship
+        if (pickOption.equals("smods")) {
+            if (potentialMods.isEmpty()) localMemory.set(MEM_NOT_ELIGIBLE, "noSMods", 0f);
+        } else if (pickOption.equals("automate")) {
             String autoReason = canBeAutomated(member);
             if (!autoReason.isEmpty()) localMemory.set(MEM_NOT_ELIGIBLE, autoReason, 0f);
-        }
+        } else if (DModManager.getNumDMods(member.getVariant()) >= DModManager.MAX_DMODS_FROM_COMBAT || potentialMods.isEmpty())
+            localMemory.set(MEM_NOT_ELIGIBLE, "maxDMods", 0f);
 
         if (!localMemory.contains(MEM_NOT_ELIGIBLE)) {
             potentialMods.sort(Comparator.comparing(HullModSpecAPI::getDisplayName));
@@ -80,14 +80,12 @@ public class DMSShowShipPicker extends BaseCommandPlugin {
 
             // Set credit price/gain based on picked option
             float credits = switch (pickOption) {
-                case 1 -> // Random d-mod
+                case "random" ->
                         Math.max(0.75f * member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec(Commodities.SUPPLIES).getBasePrice(), 100f);
-                case 2 -> // Selected d-mod
+                case "selection" ->
                         getSelectDModScalingCostMult(DModManager.getNumDMods(member.getVariant())) * getPristineHullSpec(member).getBaseValue() * getSelectDModCostMultSetting();
-                case 3 -> // Automating ship
-                        getPristineHullSpec(member).getBaseValue() * getAutomateCostMultSetting();
-                case 4 -> // Removing s-mod
-                        getPristineHullSpec(member).getBaseValue() * getRemoveSModCostMultSetting();
+                case "smods" -> getPristineHullSpec(member).getBaseValue() * getRemoveSModCostMultSetting();
+                case "automate" -> getPristineHullSpec(member).getBaseValue() * getAutomateCostMultSetting();
                 default -> 0f;
             };
             localMemory.set(MEM_CREDITS, Misc.getDGSCredits(credits), 0f);

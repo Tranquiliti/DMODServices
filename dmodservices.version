@@ -1,14 +1,13 @@
 {
-	"masterVersionFile":"https://raw.githubusercontent.com/Tranquiliti/DMODServices/main/dmodservices.version",
-	"modName":"D-MOD Services",
-	"modThreadId":26321,
-	"modVersion":
-	{
-		"major":3,
-		"minor":0,
-		"patch":1
+	"masterVersionFile": "https://raw.githubusercontent.com/Tranquiliti/DMODServices/main/dmodservices.version",
+	"modName": "D-MOD Services",
+	"modThreadId": 26321,
+	"modVersion": {
+		"major": 3,
+		"minor": 1,
+		"patch": 0
 	},
-	"starsectorVersion":"0.98a-RC8",
-	"directDownloadURL":"https://github.com/Tranquiliti/DMODServices/releases/download/v3.0.1/DMODServices-v3.0.1.zip",
-	"changelogURL":"https://raw.githubusercontent.com/Tranquiliti/DMODServices/main/changelog.txt"
+	"starsectorVersion": "0.98a-RC8",
+	"directDownloadURL": "https://github.com/Tranquiliti/DMODServices/releases/download/v3.1.0/DMODServices-v3.1.0.zip",
+	"changelogURL": "https://raw.githubusercontent.com/Tranquiliti/DMODServices/main/changelog.txt"
 }
