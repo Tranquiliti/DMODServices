@@ -1,4 +1,4 @@
-A utility mod that adds a dialog option in Size 6 or higher markets, allowing you to add Damage Mods to your ships without needing to enter combat. Also includes non-default options like making ships unrestorable or fully-automated.
+A utility mod that adds a dialog option in Size 6 or higher markets, allowing you to add damage mods to your ships without needing to enter combat. Also includes non-default options like making ships unrestorable or fully-automated.
 
 This mod is safe to add to and remove from existing saves.
 

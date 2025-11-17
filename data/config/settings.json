@@ -1,35 +1,53 @@
 #-- Note for LunaLib users --#
-# The LunaLib settings overrides the settings here.
+# LunaLib overrides the settings here.
 # Use LunaLib's in-game UI configs to toggle these instead.
 
 {
-	# Enables access to D-MOD service centers in Size 6+ markets.
-	# Disable this if your main market menu is getting too cluttered due to other mods
-	# or if you do not plan on using the services during your current playthrough.
-	"dmodservicesEnableDMODServices":true,
+	"dmodservices": {
+		# Enables access to D-MOD service centers in size 6+ markets.
+		# Disable this if your main market menu is getting too cluttered due to other mods
+		# or if you do not plan on using the services during your current playthrough.
+		"enableDMODServices": true,
 
-	# Multiplies the base cost for adding a selected d-mod to a ship
-	# This does not change how the cost scales with additional d-mods.
-	# Defaults to up to base credit value of a pristine ship
-	"dmodservicesSelectDModCostMult":1.0,
+		# Multiplies the base cost for adding a selected d-mod to a ship
+		# This does not change how the cost scales with additional d-mods.
+		# Default value is the base credit value of a pristine ship
+		"selectDModCostMult": 1.0,
 
-	# If enabled, applying a d-mod through the 'Select a d-mod' option
-	# also adds the 'Unrestorable' tag to the selected ship,
-	# preventing d-mod removal from either dockyard restoration or the Hull Restoration skill.
-	# Does NOT apply to the random d-mod option
-	"dmodservicesMakeUnrestorable":false,
+		# Adding a selected d-mod also applies the 'unrestorable' tag
+		# to the ship, preventing any d-mod removal from either
+		# dockyard restoration or the Hull Restoration skill.
+		"selectDModAddUnrestorable": false,
 
-	# Adds the option of fully-automating your ships while visiting a D-MOD service center,
-	# but only if you have discovered and defeated a certain defender fleet.
-	"dmodservicesEnableAutomateOption":false,
+		# Multiplies the base cost for removing a selected s-mod from a ship.
+		# Default value is the base credit value of a pristine ship
+		"removeSModCostMult": 1.0,
 
-	# Multiplies the base cost for automating a ship.
-	# Defaults to 3x times the base credit value of a pristine ship
-	"dmodservicesAutomateCostMult":3.0,
+		# Removing at least the base maximum number of s-mods also
+		# removes the 'unrestorable' tag from the selected ship
+		# The base maximum number of s-mods is specified in "maxPermanentHullmods" of Starsector's settings.json.
+		# Default value is 'false'
+		"removeSModRemoveUnrestorable": false,
 
-	# Multiplies the base cost for removing a selected s-mod from a ship.
-	# Defaults to base credit value of a pristine ship
-	"dmodservicesRemoveSModCostMult":1.0,
+		# Adds the option of fully-automating a selected ship while visiting a D-MOD service center,
+		# but only if you have discovered and defeated a certain defender fleet.
+		# Default value is 'false'
+		"enableAutomateOption": false,
+
+		# Multiplies the base cost for automating a ship.
+		# Default value is 3x times the base credit value of a pristine ship
+		"automateCostMult": 3.0,
+
+		# Automating a ship also adds the 'unrestorable' tag to the ship.
+		# Note that setting this to 'false' does not change the dialogue accordingly.
+		# Default value is 'true'
+		"automateAddUnrestorable": true,
+
+		# Automating a ship also applies the "no_auto_penalty" tag to the ship,
+		# preventing the ship from counting against the Automated Ships skill or similar.
+		# Default value is 'true'
+		"automateAddNoAutoPenalty": true,
+	},
 
 
 	# Other

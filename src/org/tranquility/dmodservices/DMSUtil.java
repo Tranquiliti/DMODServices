@@ -5,6 +5,7 @@ import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import lunalib.lunaSettings.LunaSettings;
+import org.json.JSONException;
 
 public final class DMSUtil {
     // strings.json Strings
@@ -18,21 +19,48 @@ public final class DMSUtil {
     public static final boolean LUNALIB_ENABLED = Global.getSettings().getModManager().isModEnabled("lunalib");
     public static final String MOD_ID = "dmodservices";
 
+    // Settings
+    public static final String SETTING_ENABLE_DMOD_SERVICES = "enableDMODServices";
+    public static final String SETTING_SELECT_DMOD_COST_MULT = "selectDModCostMult";
+    public static final String SETTING_SELECT_DMOD_ADD_UNRESTORABLE = "selectDModAddUnrestorable";
+    public static final String SETTING_REMOVE_SMOD_COST_MULT = "removeSModCostMult";
+    public static final String SETTING_REMOVE_SMOD_REMOVE_UNRESTORABLE = "removeSModRemoveUnrestorable";
+    public static final String SETTING_ENABLE_AUTOMATE_OPTION = "enableAutomateOption";
+    public static final String SETTING_AUTOMATE_COST_MULT = "automateCostMult";
+    public static final String SETTING_AUTOMATE_ADD_UNRESTORABLE = "automateAddUnrestorable";
+    public static final String SETTING_AUTOMATE_ADD_NO_AUTO_PENALTY = "automateAddNoAutoPenalty";
+
     // Memory keys
-    public static final String MEM_PICKED_SHIP = "$DModServices_pickedShip";
-    public static final String MEM_PICKED_SHIP_NAME = "$DModServices_pickedShipName";
-    public static final String MEM_ELIGIBLE_HULLMODS = "$DModServices_eligibleHullmods";
-    public static final String MEM_SET_NUM_OF_DMODS = "$DModServices_setNumOfDMods";
-    public static final String MEM_PICKED_HULLMODS_DISPLAY = "$DModServices_pickedHullmodsDisplay";
-    public static final String MEM_PICKED_HULLMODS = "$DModServices_pickedHullmods";
-    public static final String MEM_OPTION_PICKED = "$DModServices_optionPicked";
-    public static final String MEM_NOT_ELIGIBLE = "$DModServices_notEligible";
-    public static final String MEM_CREDITS = "$DModServices_credits";
-    public static final String MEM_DISABLED = "$DModServices_disabled";
-    public static final String MEM_ENABLE_AUTOMATE = "$DModServices_enableAutomate";
-    public static final String MEM_NEW_CREDITS = "$DModServices_newCredits";
+    public static final String MEM_PICKED_SHIP = "$dmodservices_pickedShip";
+    public static final String MEM_PICKED_SHIP_NAME = "$dmodservices_pickedShipName";
+    public static final String MEM_ELIGIBLE_HULLMODS = "$dmodservices_eligibleHullmods";
+    public static final String MEM_SET_NUM_OF_DMODS = "$dmodservices_setNumOfDMods";
+    public static final String MEM_PICKED_HULLMODS_DISPLAY = "$dmodservices_pickedHullmodsDisplay";
+    public static final String MEM_PICKED_HULLMODS = "$dmodservices_pickedHullmods";
+    public static final String MEM_OPTION_PICKED = "$dmodservices_optionPicked";
+    public static final String MEM_NOT_ELIGIBLE = "$dmodservices_notEligible";
+    public static final String MEM_CREDITS = "$dmodservices_credits";
+    public static final String MEM_DISABLED = "$dmodservices_disabled";
+    public static final String MEM_ENABLE_AUTOMATE = "$dmodservices_enableAutomate";
+    public static final String MEM_NEW_CREDITS = "$dmodservices_newCredits";
 
     public static final String OPT_NUM_DMOD_SELECTOR = "dmodservicesSelector";
+
+    public static boolean getSettingBoolean(String settingId) {
+        try {
+            return Global.getSettings().getJSONObject(MOD_ID).getBoolean(settingId);
+        } catch (JSONException e) {
+            throw new RuntimeException();
+        }
+    }
+
+    public static float getSettingFloat(String settingId) {
+        try {
+            return (float) Global.getSettings().getJSONObject(MOD_ID).getDouble(settingId);
+        } catch (JSONException e) {
+            throw new RuntimeException();
+        }
+    }
 
     public static ShipHullSpecAPI getPristineHullSpec(FleetMemberAPI member) {
         ShipHullSpecAPI hullSpec = member.getHullSpec().getDParentHull();
@@ -45,26 +73,26 @@ public final class DMSUtil {
 
     public static Float getSelectDModCostMultSetting() {
         if (LUNALIB_ENABLED) {
-            Float multi = LunaSettings.getFloat(MOD_ID, "selectDModCostMult");
+            Float multi = LunaSettings.getFloat(MOD_ID, SETTING_SELECT_DMOD_COST_MULT);
             if (multi != null) return multi;
         }
-        return Global.getSettings().getFloat("dmodservicesSelectDModCostMult");
+        return getSettingFloat(SETTING_SELECT_DMOD_COST_MULT);
     }
 
     public static Float getAutomateCostMultSetting() {
         if (LUNALIB_ENABLED) {
-            Float multi = LunaSettings.getFloat(MOD_ID, "automateCostMult");
+            Float multi = LunaSettings.getFloat(MOD_ID, SETTING_AUTOMATE_COST_MULT);
             if (multi != null) return multi;
         }
-        return Global.getSettings().getFloat("dmodservicesAutomateCostMult");
+        return getSettingFloat(SETTING_AUTOMATE_COST_MULT);
     }
 
     public static Float getRemoveSModCostMultSetting() {
         if (LUNALIB_ENABLED) {
-            Float multi = LunaSettings.getFloat(MOD_ID, "removeSModCostMult");
+            Float multi = LunaSettings.getFloat(MOD_ID, SETTING_REMOVE_SMOD_COST_MULT);
             if (multi != null) return multi;
         }
-        return Global.getSettings().getFloat("dmodservicesRemoveSModCostMult");
+        return getSettingFloat(SETTING_REMOVE_SMOD_COST_MULT);
     }
 
     public static void addPermaMod(ShipVariantAPI variant, String hullModId) {

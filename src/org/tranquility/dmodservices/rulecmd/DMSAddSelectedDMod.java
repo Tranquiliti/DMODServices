@@ -30,14 +30,13 @@ public class DMSAddSelectedDMod extends BaseCommandPlugin {
         for (HullModSpecAPI picked : pickedDMods)
             addPermaMod(member.getVariant(), picked.getId());
 
-        Boolean makeUnrestorable;
+        Boolean addUnrestorable;
         if (LUNALIB_ENABLED) {
-            makeUnrestorable = LunaSettings.getBoolean(MOD_ID, "makeUnrestorable");
-            if (makeUnrestorable == null)
-                makeUnrestorable = Global.getSettings().getBoolean("dmodservicesMakeUnrestorable");
-        } else makeUnrestorable = Global.getSettings().getBoolean("dmodservicesMakeUnrestorable");
+            addUnrestorable = LunaSettings.getBoolean(MOD_ID, SETTING_SELECT_DMOD_ADD_UNRESTORABLE);
+            if (addUnrestorable == null) addUnrestorable = getSettingBoolean(SETTING_SELECT_DMOD_ADD_UNRESTORABLE);
+        } else addUnrestorable = getSettingBoolean(SETTING_SELECT_DMOD_ADD_UNRESTORABLE);
 
-        if (makeUnrestorable) member.getVariant().addTag(Tags.VARIANT_UNRESTORABLE);
+        if (addUnrestorable) member.getVariant().addTag(Tags.VARIANT_UNRESTORABLE);
 
         Global.getSoundPlayer().playUISound("ui_raid_finished", 0.5f, 2f);
         return true;
