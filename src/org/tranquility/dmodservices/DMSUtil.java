@@ -4,8 +4,15 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.DModManager;
+import com.fs.starfarer.api.impl.campaign.ids.HullMods;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
+import com.fs.starfarer.api.loading.HullModSpecAPI;
 import lunalib.lunaSettings.LunaSettings;
 import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class DMSUtil {
     // strings.json Strings
@@ -98,5 +105,54 @@ public final class DMSUtil {
     public static void addPermaMod(ShipVariantAPI variant, String hullModId) {
         variant.removeSuppressedMod(hullModId);
         variant.addPermaMod(hullModId, false);
+    }
+
+    // Similar implementation to DModManager's addDMods(), but simply returns a list of eligible d-mods
+    public static List<HullModSpecAPI> getPotentialDMods(ShipVariantAPI variant, boolean canAddDestroyedMods, boolean assumeAllShipsAreAutomated) {
+        List<HullModSpecAPI> potentialMods = DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE);
+        boolean prevAssume = DModManager.assumeAllShipsAreAutomated;
+        DModManager.assumeAllShipsAreAutomated = assumeAllShipsAreAutomated; // Similar hack in PKDefenderPluginImpl.java
+        DModManager.removeUnsuitedMods(variant, potentialMods);
+        DModManager.assumeAllShipsAreAutomated = prevAssume;
+
+        if (DModManager.getNumDMods(variant, Tags.HULLMOD_DAMAGE_STRUCT) > 0)
+            potentialMods = DModManager.getModsWithoutTags(potentialMods, Tags.HULLMOD_DAMAGE_STRUCT);
+
+        if (variant.getHullSpec().getFighterBays() > 0)
+            potentialMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_FIGHTER_BAY_DAMAGE));
+
+        if (variant.getHullSpec().isPhase())
+            potentialMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE_PHASE));
+
+        if (variant.isCarrier()) potentialMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_CARRIER_ALWAYS));
+
+        // Destroyed ships always get these d-mods, so put them in list if allowed
+        if (canAddDestroyedMods) potentialMods.addAll(DModManager.getModsWithTags(Tags.HULLMOD_DESTROYED_ALWAYS));
+
+        // No duplicate d-mods
+        DModManager.removeModsAlreadyInVariant(variant, potentialMods);
+
+        return potentialMods;
+    }
+
+    public static List<HullModSpecAPI> getSMods(FleetMemberAPI member) {
+        List<HullModSpecAPI> potentialMods = new ArrayList<>(3);
+        for (String id : member.getVariant().getSMods())
+            potentialMods.add(Global.getSettings().getHullModSpec(id));
+
+        return potentialMods;
+    }
+
+    public static String getAutomatedReason(FleetMemberAPI member) {
+        if (member.getVariant().hasHullMod(HullMods.AUTOMATED)) return "alreadyAutomated";
+        if (member == Global.getSector().getPlayerFleet().getFlagship()) return "noAutoFlagship";
+        if (!member.getCaptain().isDefault()) return "officerInShip";
+        for (String wingId : member.getVariant().getNonBuiltInWings())
+            if (!Global.getSettings().getFighterWingSpec(wingId).hasTag(Tags.AUTOMATED_FIGHTER))
+                return "fightersInShip";
+        for (HullModSpecAPI hullMod : DModManager.getModsWithTags(Tags.HULLMOD_NOT_AUTO))
+            if (member.getVariant().hasHullMod(hullMod.getId())) return "incompatibleDMod";
+
+        return "";
     }
 }

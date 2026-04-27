@@ -4,12 +4,12 @@
 	"utility": "true",
 	"author": "Tranquility",
 	"version": {
-		"major": 3,
-		"minor": 1,
+		"major": 4,
+		"minor": 0,
 		"patch": 0
 	},
-	"description": "Adds D-MOD services, which lets your ships gain Damage Mods in a controlled environment.",
-	"gameVersion": "0.98a-RC8",
+	"description": "Adds D-MOD services, which lets your ships gain damage mods in a controlled environment.",
+	"gameVersion": "0.98.5a",
 	"jars": [
 		"jars/DMODServices.jar"
 	],

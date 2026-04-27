@@ -1,4 +1,4 @@
-A utility mod that adds a dialog option in Size 6 or higher markets, allowing you to add damage mods to your ships without needing to enter combat. Also includes non-default options like making ships unrestorable or fully-automated.
+A utility mod for <a href=https://fractalsoftworks.com/>Starsector</a> that adds a dialog option in size 6 or higher markets, allowing you to add damage mods to your ships without needing to enter combat. Also includes non-default options like making ships unrestorable or fully-automated.
 
 This mod is safe to add to and remove from existing saves.
 
@@ -7,5 +7,5 @@ This mod is safe to add to and remove from existing saves.
 <b>Unofficial Starsector Discord</b> - For helpful modding information and tips<br>
 <b>Alex and the Fractal Softworks team</b> - For the amazing game that is Starsector!<br>
 
-# Modding Notes
-This mod is licensed under <b>CC0 1.0</b>. Feel free to take or use anything here for your own use.
+# Modding notes
+This mod is licensed under <b>CC0 1.0</b>. Feel free to take or use anything here for your own use, provided this use also follows the Starsector User License.
