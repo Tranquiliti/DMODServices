@@ -30,6 +30,7 @@ public final class DMSUtil {
     public static final String SETTING_ENABLE_DMOD_SERVICES = "enableDMODServices";
     public static final String SETTING_SELECT_DMOD_COST_MULT = "selectDModCostMult";
     public static final String SETTING_SELECT_DMOD_ADD_UNRESTORABLE = "selectDModAddUnrestorable";
+    public static final String SETTING_SELECT_DMOD_ENABLE_ALL_DMODS = "selectDModEnableAllDMods";
     public static final String SETTING_REMOVE_SMOD_COST_MULT = "removeSModCostMult";
     public static final String SETTING_REMOVE_SMOD_REMOVE_UNRESTORABLE = "removeSModRemoveUnrestorable";
     public static final String SETTING_ENABLE_AUTOMATE_OPTION = "enableAutomateOption";
@@ -102,6 +103,14 @@ public final class DMSUtil {
         return getSettingFloat(SETTING_REMOVE_SMOD_COST_MULT);
     }
 
+    public static boolean getEnableAllDModsSetting() {
+        if (LUNALIB_ENABLED) {
+            Boolean enableAllDMods = LunaSettings.getBoolean(MOD_ID, SETTING_SELECT_DMOD_ENABLE_ALL_DMODS);
+            if (enableAllDMods != null) return enableAllDMods;
+        }
+        return getSettingBoolean(SETTING_SELECT_DMOD_ENABLE_ALL_DMODS);
+    }
+
     public static void addPermaMod(ShipVariantAPI variant, String hullModId) {
         variant.removeSuppressedMod(hullModId);
         variant.addPermaMod(hullModId, false);
@@ -109,7 +118,16 @@ public final class DMSUtil {
 
     // Similar implementation to DModManager's addDMods(), but simply returns a list of eligible d-mods
     public static List<HullModSpecAPI> getPotentialDMods(ShipVariantAPI variant, boolean canAddDestroyedMods, boolean assumeAllShipsAreAutomated) {
-        List<HullModSpecAPI> potentialMods = DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE);
+        List<HullModSpecAPI> potentialMods;
+
+        // If selecting d-mods and the setting is enabled, return all d-mods instead
+        if (canAddDestroyedMods && getEnableAllDModsSetting()) {
+            potentialMods = DModManager.getModsWithTags(Tags.HULLMOD_DMOD);
+            DModManager.removeModsAlreadyInVariant(variant, potentialMods);
+            return potentialMods;
+        }
+
+        potentialMods = DModManager.getModsWithTags(Tags.HULLMOD_DAMAGE);
         boolean prevAssume = DModManager.assumeAllShipsAreAutomated;
         DModManager.assumeAllShipsAreAutomated = assumeAllShipsAreAutomated; // Similar hack in PKDefenderPluginImpl.java
         DModManager.removeUnsuitedMods(variant, potentialMods);

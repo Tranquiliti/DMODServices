@@ -33,7 +33,7 @@ public class DMSSelectDModPanel extends DMSSelectHullmodPanel {
         boolean isPressed = buttons.get(pressedHullMod.getId()).isChecked();
         buttonsChecked += isPressed ? 1 : -1;
         if (!pressedHullMod.hasTag(Tags.HULLMOD_DESTROYED_ALWAYS) && pressedHullMod.hasTag(Tags.HULLMOD_DAMAGE_STRUCT))
-            allowDamageStruct = !isPressed;
+            allowDamageStruct = getEnableAllDModsSetting() || !isPressed;
 
         for (String dModId : buttons.keySet()) {
             ButtonAPI thisButton = buttons.get(dModId);
