@@ -30,12 +30,13 @@ public class DMSSelectSModPanel extends DMSSelectHullmodPanel {
         this.memoryMap = memoryMap;
 
         List<HullModSpecAPI> sMods = (List<HullModSpecAPI>) memoryMap.get(MemKeys.LOCAL).get(MEM_ELIGIBLE_HULLMODS);
-        buttons = new LinkedHashMap<>(sMods.size());
+        buttons = new LinkedHashMap<>();
         TooltipMakerAPI tooltip = panel.createUIElement(panel.getPosition().getWidth(), panel.getPosition().getHeight(), true);
         for (HullModSpecAPI thisHullMod : sMods) {
             float imageSize = 25f;
             ButtonAPI button = tooltip.addAreaCheckbox(thisHullMod.getDisplayName(), thisHullMod, Misc.getButtonTextColor(), Misc.getDarkPlayerColor(), Misc.getPositiveHighlightColor(), panel.getPosition().getWidth() - 25f, imageSize, 5f);
-            tooltip.addImage(thisHullMod.getSpriteName(), imageSize, imageSize, -25f); // Hacky way of "attaching" hullmod sprite to area checkbox
+            // Hacky way of "attaching" hullmod sprite to area checkbox
+            tooltip.addImage(thisHullMod.getSpriteName(), imageSize, imageSize, -25f);
             buttons.put(thisHullMod.getId(), button);
         }
         panel.addUIElement(tooltip);

@@ -1,12 +1,9 @@
 #-- Note for LunaLib users --#
 # LunaLib overrides the settings here.
 # Use LunaLib's in-game UI configs to toggle these instead.
-
 {
 	"dmodservices": {
 		# Enables access to D-MOD service centers in size 6+ markets.
-		# Disable this if your main market menu is getting too cluttered due to other mods
-		# or if you do not plan on using the services during your current playthrough.
 		"enableDMODServices": true,
 
 		# Multiplies the base cost for adding a selected d-mod to a ship
@@ -17,7 +14,13 @@
 		# Adding a selected d-mod also applies the 'unrestorable' tag
 		# to the ship, preventing any d-mod removal from either
 		# dockyard restoration or the Hull Restoration skill.
+		# Default value is 'false'
 		"selectDModAddUnrestorable": false,
+
+		# Enables all 'dmod'-tagged hullmods to appear as options, with no specific restrictions,
+		# when adding selected d-mods for a ship.
+		# Default value is 'false'
+		"selectDModEnableAllDMods": false,
 
 		# Multiplies the base cost for removing a selected s-mod from a ship.
 		# Default value is the base credit value of a pristine ship
@@ -39,11 +42,11 @@
 		"automateCostMult": 3.0,
 
 		# Automating a ship also adds the 'unrestorable' tag to the ship.
-		# Note that setting this to 'false' does not change the dialogue accordingly.
+		# The dialogue remains unaffected if this option is disabled.
 		# Default value is 'true'
 		"automateAddUnrestorable": true,
 
-		# Automating a ship also applies the "no_auto_penalty" tag to the ship,
+		# Automating a ship also applies the 'no_auto_penalty' tag to the ship,
 		# preventing the ship from counting against the Automated Ships skill or similar.
 		# Default value is 'true'
 		"automateAddNoAutoPenalty": true,
