@@ -3,11 +3,11 @@
 	"modName": "D-MOD Services",
 	"modThreadId": 26321,
 	"modVersion": {
-		"major": 4,
-		"minor": 0,
+		"major": 3,
+		"minor": 2,
 		"patch": 0
 	},
-	"starsectorVersion": "0.98.5a",
+	"starsectorVersion": "0.98a-RC8",
 	"directDownloadURL": "https://github.com/Tranquiliti/DMODServices/releases/latest/download/DMODServices.zip",
 	"changelogURL": "https://raw.githubusercontent.com/Tranquiliti/DMODServices/main/changelog.txt"
 }
