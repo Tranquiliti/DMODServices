@@ -157,6 +157,7 @@ public class DMS_CMD extends BaseCommandPlugin {
     }
 
     private boolean hasShipsProduction(MemoryAPI memory) {
+        // TODO: make use of Misc.hasHeavyIndustry method (uses MarketAPI as argument)
         return memory.contains("$ind:" + Industries.ORBITALWORKS) || memory.contains("$ind:" + Industries.HEAVYINDUSTRY);
     }
 
@@ -242,10 +243,10 @@ public class DMS_CMD extends BaseCommandPlugin {
             // Set credit price/gain based on picked option
             float credits = switch (pickOption) {
                 case "random" ->
-                        Math.max(0.75f * member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec(Commodities.SUPPLIES).getBasePrice(), 100f);
-                case "selection" ->
-                        getSelectDModScalingCostMult(DModManager.getNumDMods(member.getVariant())) * getPristineHullSpec(member).getBaseValue() * getSelectDModCostMultSetting();
-                case "smods" -> getPristineHullSpec(member).getBaseValue() * getRemoveSModCostMultSetting();
+                        Misc.isExtended() ? 10f : Math.max(0.75f * member.getStatus().getHullFraction() * member.getRepairTracker().getSuppliesFromScuttling() * Global.getSettings().getCommoditySpec(Commodities.SUPPLIES).getBasePrice(), 100f);
+                case "selection" -> getPristineHullSpec(member).getBaseValue() * getSelectDModCostMultSetting();
+                case "smods" ->
+                        Global.getSettings().getInt("changeSmodsCost_%s".formatted(member.getHullSpec().getHullSize().toString())) * getRemoveSModCostMultSetting();
                 case "automate" -> getPristineHullSpec(member).getBaseValue() * getAutomateCostMultSetting();
                 default -> 0f;
             };

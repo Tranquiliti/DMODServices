@@ -75,10 +75,6 @@ public final class DMSUtil {
         return hullSpec == null ? member.getHullSpec() : hullSpec;
     }
 
-    public static float getSelectDModScalingCostMult(int numOfDMods) {
-        return Math.min(numOfDMods * 0.15f + 0.4f, 1.0f);
-    }
-
     public static Float getSelectDModCostMultSetting() {
         if (LUNALIB_ENABLED) {
             Float multi = LunaSettings.getFloat(MOD_ID, SETTING_SELECT_DMOD_COST_MULT);
