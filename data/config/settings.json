@@ -6,14 +6,12 @@
 		# Enables access to D-MOD service centers in size 6+ markets.
 		"enableDMODServices": true,
 
-		# Multiplies the base cost for adding a selected d-mod to a ship
-		# This does not change how the cost scales with additional d-mods.
-		# Default value is the base credit value of a pristine ship
-		"selectDModCostMult": 1.0,
+		# Multiplies the base cost for adding a selected d-mod to a ship.
+		# Default value is 0.2x the base credit value of a pristine ship
+		"selectDModCostMult": 0.2,
 
 		# Adding a selected d-mod also applies the 'unrestorable' tag
-		# to the ship, preventing any d-mod removal from either
-		# dockyard restoration or the Hull Restoration skill.
+		# to the ship, preventing any d-mod repair.
 		# Default value is 'false'
 		"selectDModAddUnrestorable": false,
 
@@ -23,8 +21,8 @@
 		"selectDModEnableAllDMods": false,
 
 		# Multiplies the base cost for removing a selected s-mod from a ship.
-		# Default value is the base credit value of a pristine ship
-		"removeSModCostMult": 1.0,
+		# Default value is 2x the base credit value of a pristine ship
+		"removeSModCostMult": 2.0,
 
 		# Removing at least the base maximum number of s-mods also
 		# removes the 'unrestorable' tag from the selected ship
@@ -38,7 +36,7 @@
 		"enableAutomateOption": false,
 
 		# Multiplies the base cost for automating a ship.
-		# Default value is 3x times the base credit value of a pristine ship
+		# Default value is 3x the base credit value of a pristine ship
 		"automateCostMult": 3.0,
 
 		# Automating a ship also adds the 'unrestorable' tag to the ship.

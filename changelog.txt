@@ -1,7 +1,18 @@
+Version 4.0.0 (Update for Starsector 0.98.5a)
+* Credit gain for "Random d-mod" option is now always 10 credits per demonstration in Survival mode
+* Credit cost for "Select d-mods" option is now always a flat 20% of pristine ship value
+* Credit costs for "Remove s-mods" option now uses the vanilla s-mod change costs ("changeSmodsCost_[SHIP_SIZE]" in the vanilla settings.json)
+  - Base cost is now double the cost of the vanilla method (to compensate for being available without a player colony)
+* Adjusted default values for settings.json and LunaSettings (due to above changes)
+  - The mod's LunaSettings may need to be reset to default to update to the intended values
+* Fixed a typo in dialogue
+
+
+
 Version 3.2.0
 
 * Added "selectDModEnableAllDMods" setting
-  - If enabled, all 'dmod'-tagged hullmods can appear as options when selecting d-mods for a ship.
+  - If enabled, all 'dmod'-tagged hullmods can appear as options when selecting d-mods for a ship
 * "Remove s-mod" option is now available for size 6 markets with an Orbital Works or Heavy Industry (previously required completing The Usurpers mission)
 * Major code refactors
 

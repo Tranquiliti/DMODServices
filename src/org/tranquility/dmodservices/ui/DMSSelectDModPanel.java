@@ -78,7 +78,7 @@ public class DMSSelectDModPanel extends DMSSelectHullmodPanel {
             float baseValue = DMSUtil.getPristineHullSpec((FleetMemberAPI) localMemory.get(MEM_PICKED_SHIP)).getBaseValue();
             float multi = DMSUtil.getSelectDModCostMultSetting();
             for (int i = 1; i < checked.size(); i++)
-                newCredits += getSelectDModScalingCostMult(numExistingDMods + i) * baseValue * multi;
+                newCredits += baseValue * multi;
         }
 
         StringBuilder display = new StringBuilder();

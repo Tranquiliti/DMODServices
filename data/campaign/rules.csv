@@ -166,7 +166,7 @@ SetShortcut dmodservicesSModsGoBack2 ""ESCAPE""
 AddText ""Selected s-mods: $dmodservices_pickedHullmodsDisplay.""
 SetTextHighlights $dmodservices_pickedHullmodsDisplay
 SetTooltip dmodservicesSModsConfirm ""Remove the selected s-mods from the ship.""
-DoCanAffordCheck $dmodservices_newCredits dmodservicesSModsConfirm false",The D-MOD representative confirms tha the $dmodservices_pickedShipName will require $dmodservices_newCredits to fully remove all the selected special modifications.,"dmodservicesSModsConfirm:Confirm
+DoCanAffordCheck $dmodservices_newCredits dmodservicesSModsConfirm false",The D-MOD representative confirms that the $dmodservices_pickedShipName will require $dmodservices_newCredits to fully remove all the selected special modifications.,"dmodservicesSModsConfirm:Confirm
 dmodservicesSModsGoBack2:Go back",
 dmodservices_SModsConfirmSel,DialogOptionSelected,$option == dmodservicesSModsConfirm,"SetTextHighlights $dmodservices_pickedShipName
 DMS_CMD removeSMod
